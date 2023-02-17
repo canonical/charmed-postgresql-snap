@@ -1,0 +1,50 @@
+name: charmed-postgresql # you probably want to 'snapcraft register <name>'
+base: core22 # the base snap is the execution environment for this snap
+version: '14.0' # just for humans, typically '1.2+git' or '1.3.2'
+summary: PostgreSQL in a snap.
+description: |
+  This is my-snap's description. You have a paragraph or two to tell the
+  most important story about your snap. Keep it under 100 words though,
+  we live in tweetspace and your description wants to look good in the snap
+  store.
+
+grade: devel # must be 'stable' to release into candidate/stable channels
+confinement: devmode # use 'strict' once you have the right plugs and slots
+
+apps:
+  createdb:
+    command: usr/bin/createdb
+  createuser:
+    command: usr/bin/createuser
+  patroni:
+    command: usr/bin/patroni
+  patroni-raft-controller:
+    command: usr/bin/patroni_raft_controller
+  patronictl:
+    command: usr/bin/patronictl
+  patroni-aws:
+    command: usr/bin/patroni_aws
+  patroni-wale-restore:
+    command: usr/bin/patroni_wale_restore
+  pgbackrest:
+    command: usr/bin/pgbackrest
+  pgbench:
+    command: usr/bin/pgbench
+  pgbouncer:
+    command: usr/sbin/pgbouncer
+  prometheus-postgres-exporter:
+    command: usr/bin/prometheus-postgres-exporter
+    daemon: simple
+  psql:
+    command: usr/bin/psql
+
+parts:
+  postgresql-debs:
+    plugin: nil
+    stage-packages:
+      - postgresql
+      - patroni
+      - pgbouncer
+      - pgbackrest
+      - prometheus-postgres-exporter
+      - util-linux
