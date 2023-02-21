@@ -11,13 +11,21 @@ description: |
 grade: devel # must be 'stable' to release into candidate/stable channels
 confinement: devmode # use 'strict' once you have the right plugs and slots
 
+system-usernames:
+  snap_daemon: shared
+
 apps:
   createdb:
     command: usr/bin/createdb
   createuser:
     command: usr/bin/createuser
   patroni:
-    command: usr/bin/patroni
+    command: start-patroni.sh
+    daemon: simple
+    install-mode: disable
+    plugs:
+      - network
+      - network-bind
   patroni-raft-controller:
     command: usr/bin/patroni_raft_controller
   patronictl:
@@ -48,3 +56,6 @@ parts:
       - pgbackrest
       - prometheus-postgres-exporter
       - util-linux
+  wrapper:
+    plugin: dump
+    source: snap/local
