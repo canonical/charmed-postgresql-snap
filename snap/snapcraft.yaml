@@ -3,13 +3,12 @@ base: core22 # the base snap is the execution environment for this snap
 version: '14.0' # just for humans, typically '1.2+git' or '1.3.2'
 summary: PostgreSQL in a snap.
 description: |
-  This is my-snap's description. You have a paragraph or two to tell the
-  most important story about your snap. Keep it under 100 words though,
-  we live in tweetspace and your description wants to look good in the snap
-  store.
+  PostgreSQL is a free and open-source relational database management
+  system emphasizing extensibility and SQL compliance.  This package
+  includes patroni for managing your PostgreSQL systems.
 
-grade: devel # must be 'stable' to release into candidate/stable channels
-confinement: devmode # use 'strict' once you have the right plugs and slots
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
 
 system-usernames:
   snap_daemon: shared
@@ -38,6 +37,50 @@ apps:
     command: usr/bin/patroni_aws
   patroni-wale-restore:
     command: usr/bin/patroni_wale_restore
+  pg-archivecleanup:
+    command: usr/bin/pg_archivecleanup
+  pg-buildext:
+    command: usr/bin/pg_buildext
+  pg-createcluster:
+    command: usr/bin/pg_createcluster
+  pg-dropcluster:
+    command: usr/bin/pg_dropcluster
+  pg-isready:
+    command: usr/bin/pg_isready
+  pg-receivexlog:
+    command: usr/bin/pg_receivexlog
+  pg-restore:
+    command: usr/bin/pg_restore
+  pg-upgradecluster:
+    command: usr/bin/pg_upgradecluster
+  pg-backupcluster:
+    command: usr/bin/pg_backupcluster
+  pg-config:
+    command: usr/bin/pg_config
+  pg-dump:
+    command: usr/bin/pg_dump
+  pg-lsclusters:
+    command: usr/bin/pg_lsclusters
+  pg-recvlogical:
+    command: usr/bin/pg_recvlogical
+  pg-restorecluster:
+    command: usr/bin/pg_restorecluster
+  pg-virtualenv:
+    command: usr/bin/pg_virtualenv
+  pg-basebackup:
+    command: usr/bin/pg_basebackup
+  pg-conftool:
+    command: usr/bin/pg_conftool
+  pg-ctlcluster:
+    command: usr/bin/pg_ctlcluster
+  pg-dumpall:
+    command: usr/bin/pg_dumpall
+  pg-receivewal:
+    command: usr/bin/pg_receivewal
+  pg-renamecluster:
+    command: usr/bin/pg_renamecluster
+  pg-updatedicts:
+    command: usr/sbin/pg_updatedicts
   pgbackrest:
     command: usr/bin/pgbackrest
   pgbench:
@@ -51,15 +94,35 @@ apps:
     command: usr/bin/psql
 
 parts:
-  postgresql-debs:
+  postgres-debs:
     plugin: nil
     stage-packages:
       - postgresql
+      - util-linux
       - patroni
       - pgbouncer
       - pgbackrest
       - prometheus-postgres-exporter
-      - util-linux
+      - python3-psycopg2
+      - python3-pysyncobj
+  patroni:
+    after: [postgres-debs]
+    plugin: python
+    source: https://github.com/zalando/patroni/archive/refs/tags/v3.0.1.tar.gz
+    build-packages:
+      - python3-pip
+    override-build: |
+      sleep 1s
+    override-prime: |
+      DIST_PACK=$CRAFT_PRIME/usr/lib/python3/dist-packages
+      mkdir -p $CRAFT_PRIME/usr/local/bin
+      rm -rf $DIST_PACK/patroni*
+      pip install patroni[raft]==3.0.1 -t $DIST_PACK
+      cp $DIST_PACK/bin/patroni $CRAFT_PRIME/usr/bin/
+      cp $DIST_PACK/bin/patroni_raft_controller $CRAFT_PRIME/usr/bin/
+      cp $DIST_PACK/bin/patronictl $CRAFT_PRIME/usr/bin/
+      cp $DIST_PACK/bin/patroni_aws $CRAFT_PRIME/usr/bin/
+      cp $DIST_PACK/bin/patroni_wale_restore $CRAFT_PRIME/usr/bin/
   wrapper:
     plugin: dump
     source: snap/local
