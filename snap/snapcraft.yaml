@@ -16,6 +16,28 @@ system-usernames:
 layout:
   /usr/lib/python3/dist-packages:
     bind: $SNAP/usr/lib/python3/dist-packages
+  /etc/perl:
+    bind: $SNAP/etc/perl
+  /usr/local/lib/x86_64-linux-gnu/perl:
+    bind: $SNAP/usr/local/lib/x86_64-linux-gnu/perl
+  /usr/local/share/perl:
+    bind: $SNAP/usr/local/share/perl
+  /usr/lib/x86_64-linux-gnu/perl5:
+    bind: $SNAP/usr/lib/x86_64-linux-gnu/perl5
+  /usr/share/perl5:
+    bind: $SNAP/usr/share/perl5
+  /usr/lib/x86_64-linux-gnu/perl-base:
+    bind: $SNAP/usr/lib/x86_64-linux-gnu/perl-base
+  /usr/lib/x86_64-linux-gnu/perl:
+    bind: $SNAP/usr/lib/x86_64-linux-gnu/perl
+  /usr/share/perl:
+    bind: $SNAP/usr/share/perl
+  /usr/local/lib/site_perl:
+    bind: $SNAP/usr/local/lib/site_perl
+  /usr/lib/postgresql/14:
+    bind: $SNAP/usr/lib/postgresql/14
+  /var/cache/postgresql:
+    bind: $SNAP_COMMON/var/cache/postgresql
 
 apps:
   createdb:
@@ -47,8 +69,8 @@ apps:
     command: usr/bin/pg_dropcluster
   pg-isready:
     command: usr/bin/pg_isready
-  pg-receivexlog:
-    command: usr/bin/pg_receivexlog
+  # pg-receivexlog:
+  #   command: usr/bin/pg_receivexlog
   pg-restore:
     command: usr/bin/pg_restore
   pg-upgradecluster:
@@ -97,6 +119,8 @@ parts:
   postgres-debs:
     plugin: nil
     stage-packages:
+      - perl
+      - perl-base
       - postgresql
       - util-linux
       - patroni
@@ -105,6 +129,9 @@ parts:
       - prometheus-postgres-exporter
       - python3-psycopg2
       - python3-pysyncobj
+      - python3-boto3
+      - postgresql-common
+      - postgresql-client-14
   patroni:
     after: [postgres-debs]
     plugin: python
