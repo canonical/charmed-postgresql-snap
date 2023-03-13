@@ -1,0 +1,16 @@
+#!/bin/bash
+
+PATRONI_DATA=$SNAP_DATA/patroni
+
+mkdir -p $SNAP_DATA/raft
+mkdir -p $SNAP_DATA/postgresql
+mkdir -p $PATRONI_DATA
+mkdir -p $SNAP_COMMON/raft
+mkdir -p $SNAP_COMMON/postgresql
+mkdir -p $SNAP_COMMON/patroni
+mkdir -p $SNAP_COMMON/postgresql.failed
+
+cp $SNAP/config/patroni.yaml $PATRONI_DATA/config.yaml
+
+chown -R 584788:root $SNAP_COMMON/*
+chown -R 584788:root $SNAP_DATA/*
