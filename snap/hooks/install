@@ -2,6 +2,8 @@
 
 PATRONI_DATA=$SNAP_DATA/patroni
 
+mkdir -p $SNAP_DATA/etc
+mkdir -p $SNAP_COMMON/var/lib/pgbackrest
 mkdir -p $SNAP_DATA/raft
 mkdir -p $SNAP_DATA/postgresql
 mkdir -p $PATRONI_DATA
@@ -11,6 +13,11 @@ mkdir -p $SNAP_COMMON/patroni
 mkdir -p $SNAP_COMMON/postgresql.failed
 
 cp $SNAP/config/patroni.yaml $PATRONI_DATA/config.yaml
+cp $SNAP/etc/pgbackrest.conf $SNAP_DATA/etc/
+
+sed -i "s:/var/lib/pgbackrest:$SNAP_COMMON/var/lib/pgbackrest:g" $SNAP_DATA/etc/pgbackrest.conf
+echo "pg1-path=$SNAP_COMMON/data/db" >> $SNAP_DATA/etc/pgbackrest.conf
+echo "pg1-user=snap_daemon" >> $SNAP_DATA/etc/pgbackrest.conf
 
 chown -R 584788:root $SNAP_COMMON/*
 chown -R 584788:root $SNAP_DATA/*

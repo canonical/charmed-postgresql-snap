@@ -1,0 +1,18 @@
+on:
+  workflow_dispatch:
+  workflow_call:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yaml
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: postgres-snap
+      - name: Install tox
+        run: python3 -m pip install tox
+      - name: Smoke Tests
+        run: tox -e smoke

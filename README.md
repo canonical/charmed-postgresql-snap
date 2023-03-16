@@ -28,5 +28,5 @@ sudo snap install ./charmed-postgresql*.charm --devmode
 ## License
 The PostgreSQL Snap is free software, distributed under the Apache
 Software License, version 2.0. See
-[LICENSE](https://github.com/canonical/charme-postgresql-snap/blob/14.0/edge/LICENSE)
+[LICENSE](https://github.com/canonical/charme-postgresql-snap/blob/14.0/edge/licenses/LICENSE-snap)
 for more information.

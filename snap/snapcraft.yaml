@@ -105,6 +105,9 @@ apps:
     command: usr/sbin/pg_updatedicts
   pgbackrest:
     command: usr/bin/pgbackrest
+  pgbackrest-service:
+    command: start-pgbackrest.sh
+    daemon: simple
   pgbench:
     command: usr/bin/pgbench
   pgbouncer:
@@ -112,8 +115,16 @@ apps:
   prometheus-postgres-exporter:
     command: usr/bin/prometheus-postgres-exporter
     daemon: simple
+    install-mode: disable
+    plugs:
+      - network
+      - network-bind
   psql:
     command: usr/bin/psql
+  syncobj-admin:
+    command: usr/bin/syncobj_admin
+    plugs:
+      - network
 
 parts:
   postgres-debs:
@@ -132,6 +143,10 @@ parts:
       - python3-boto3
       - postgresql-common
       - postgresql-client-14
+      - postgresql-contrib
+      - postgresql-14-debversion
+      - postgresql-plpython3-14
+      - python-apt-dev
   patroni:
     after: [postgres-debs]
     plugin: python
