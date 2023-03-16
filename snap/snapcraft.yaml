@@ -93,6 +93,8 @@ apps:
     command: usr/bin/pg_basebackup
   pg-conftool:
     command: usr/bin/pg_conftool
+  pg-ctl:
+    command: usr/lib/postgresql/14/bin/pg_ctl
   pg-ctlcluster:
     command: usr/bin/pg_ctlcluster
   pg-dumpall:
