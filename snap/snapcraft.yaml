@@ -168,8 +168,9 @@ parts:
       - python3-dateutil
   patroni:
     after: [postgres-debs]
-    plugin: dump 
-    source: http://us.archive.ubuntu.com/ubuntu/pool/universe/p/patroni/patroni_3.0.1-1_all.deb
+    plugin: dump
+    source: "http://us.archive.ubuntu.com/ubuntu/pool/universe/\
+      p/patroni/patroni_3.0.1-1_all.deb"
   wrapper:
     plugin: dump
     source: snap/local
