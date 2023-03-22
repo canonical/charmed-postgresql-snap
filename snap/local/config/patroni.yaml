@@ -12,8 +12,8 @@ restapi:
 
 bootstrap:
   initdb:
-  - locale: C
-  - encoding: UTF8
+    - locale: C
+    - encoding: UTF8
   dcs:
     ttl: 30
     loop_wait: 10

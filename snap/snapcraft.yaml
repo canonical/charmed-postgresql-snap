@@ -52,6 +52,7 @@ apps:
     command: start-patroni.sh
     daemon: simple
     install-mode: disable
+    restart-condition: always
     plugs:
       - network
       - network-bind
@@ -59,6 +60,8 @@ apps:
     command: usr/bin/patroni_raft_controller
   patronictl:
     command: usr/bin/patronictl
+    plugs:
+      - network
   patroni-aws:
     command: usr/bin/patroni_aws
   patroni-wale-restore:
