@@ -38,7 +38,8 @@ postgresql:
   data_dir: /var/snap/charmed-postgresql/common/postgresql
   bin_dir: /snap/charmed-postgresql/current/usr/lib/postgresql/14/bin
   config_dir: /var/snap/charmed-postgresql/current/postgresql
-  pgpass: /var/snap/charmed-postgresql/current/postgresql/data/14-postgresql.pgpass
+  pgpass: "/var/snap/charmed-postgresql/current/postgresql/\
+      data/14-postgresql.pgpass"
   authentication:
     replication:
       username: "replicator"
