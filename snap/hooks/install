@@ -1,0 +1,18 @@
+#!/bin/bash
+
+VAR_LIB_PGBACKREST=$SNAP_COMMON/var/lib/pgbackrest
+
+mkdir -p $SNAP_DATA/etc/
+mkdir -p $VAR_LIB_PGBACKREST
+mkdir -p $SNAP_COMMON/postgresql.failed
+mkdir -p $SNAP_COMMON/data/db
+
+cp $SNAP/config/patroni.yaml $SNAP_DATA/etc/
+cp $SNAP/etc/pgbackrest.conf $SNAP_DATA/etc/
+
+sed -i "s:/var/lib/pgbackrest:$VAR_LIB_PGBACKREST:g" $SNAP_DATA/etc/pgbackrest.conf
+echo "pg1-path=$SNAP_COMMON/data/db" >> $SNAP_DATA/etc/pgbackrest.conf
+echo "pg1-user=snap_daemon" >> $SNAP_DATA/etc/pgbackrest.conf
+
+chown -R 584788:root $SNAP_COMMON/*
+chown -R 584788:root $SNAP_DATA/*

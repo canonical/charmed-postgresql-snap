@@ -1,0 +1,28 @@
+on:
+  push:
+    branches:
+      - '[0-9]+/[a-z]+'
+  workflow_call:
+  workflow_dispatch:
+
+jobs:
+  build:
+    uses: ./.github/workflows/build.yaml
+  publish:
+    name: Publish Snap
+    runs-on: ubuntu-latest
+    needs: build
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/download-artifact@v3
+        with:
+          name: snap-artifact
+      - id: get-snap-name
+        run: echo "SNAP_FILE=$(ls *.snap)" >> $GITHUB_OUTPUT
+      - uses: snapcore/action-publish@v1
+        env:
+          SNAPCRAFT_STORE_CREDENTIALS: ${{ secrets.STORE_LOGIN }}
+        with:
+          snap: ${{ steps.get-snap-name.outputs.SNAP_FILE }}
+          release: ${{ github.ref_name }}

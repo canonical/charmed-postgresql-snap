@@ -1,0 +1,179 @@
+name: charmed-postgresql # you probably want to 'snapcraft register <name>'
+base: core22 # the base snap is the execution environment for this snap
+version: '14.7' # just for humans, typically '1.2+git' or '1.3.2'
+summary: PostgreSQL in a snap.
+description: |
+  PostgreSQL is a free and open-source relational database management
+  system emphasizing extensibility and SQL compliance.  This package
+  includes patroni for managing your PostgreSQL systems.
+
+grade: stable # must be 'stable' to release into candidate/stable channels
+confinement: strict # use 'strict' once you have the right plugs and slots
+
+system-usernames:
+  snap_daemon: shared
+
+plugs:
+  shared-memory:
+    private: true
+
+layout:
+  /usr/lib/python3/dist-packages:
+    bind: $SNAP/usr/lib/python3/dist-packages
+  /etc/perl:
+    bind: $SNAP/etc/perl
+  /usr/local/lib/x86_64-linux-gnu/perl:
+    bind: $SNAP/usr/local/lib/x86_64-linux-gnu/perl
+  /usr/local/share/perl:
+    bind: $SNAP/usr/local/share/perl
+  /usr/lib/x86_64-linux-gnu/perl5:
+    bind: $SNAP/usr/lib/x86_64-linux-gnu/perl5
+  /usr/share/perl5:
+    bind: $SNAP/usr/share/perl5
+  /usr/lib/x86_64-linux-gnu/perl-base:
+    bind: $SNAP/usr/lib/x86_64-linux-gnu/perl-base
+  /usr/lib/x86_64-linux-gnu/perl:
+    bind: $SNAP/usr/lib/x86_64-linux-gnu/perl
+  /usr/share/perl:
+    bind: $SNAP/usr/share/perl
+  /usr/local/lib/site_perl:
+    bind: $SNAP/usr/local/lib/site_perl
+  /usr/lib/postgresql/14:
+    bind: $SNAP/usr/lib/postgresql/14
+  /var/cache/postgresql:
+    bind: $SNAP_COMMON/var/cache/postgresql
+
+apps:
+  createdb:
+    command: usr/bin/createdb
+  createuser:
+    command: usr/bin/createuser
+  patroni:
+    command: start-patroni.sh
+    daemon: simple
+    install-mode: disable
+    restart-condition: always
+    plugs:
+      - network
+      - network-bind
+  patroni-raft-controller:
+    command: usr/bin/patroni_raft_controller
+  patronictl:
+    command: usr/bin/patronictl
+    plugs:
+      - network
+  patroni-aws:
+    command: usr/bin/patroni_aws
+  patroni-wale-restore:
+    command: usr/bin/patroni_wale_restore
+  pg-archivecleanup:
+    command: usr/bin/pg_archivecleanup
+  pg-buildext:
+    command: usr/bin/pg_buildext
+  pg-createcluster:
+    command: usr/bin/pg_createcluster
+  pg-dropcluster:
+    command: usr/bin/pg_dropcluster
+  pg-isready:
+    command: usr/bin/pg_isready
+  # pg-receivexlog:
+  #   command: usr/bin/pg_receivexlog
+  pg-restore:
+    command: usr/bin/pg_restore
+  pg-upgradecluster:
+    command: usr/bin/pg_upgradecluster
+  pg-backupcluster:
+    command: usr/bin/pg_backupcluster
+  pg-config:
+    command: usr/bin/pg_config
+  pg-dump:
+    command: usr/bin/pg_dump
+  pg-lsclusters:
+    command: usr/bin/pg_lsclusters
+  pg-recvlogical:
+    command: usr/bin/pg_recvlogical
+  pg-restorecluster:
+    command: usr/bin/pg_restorecluster
+  pg-virtualenv:
+    command: usr/bin/pg_virtualenv
+  pg-basebackup:
+    command: usr/bin/pg_basebackup
+  pg-conftool:
+    command: usr/bin/pg_conftool
+  pg-ctl:
+    command: usr/lib/postgresql/14/bin/pg_ctl
+  pg-ctlcluster:
+    command: usr/bin/pg_ctlcluster
+  pg-dumpall:
+    command: usr/bin/pg_dumpall
+  pg-receivewal:
+    command: usr/bin/pg_receivewal
+  pg-renamecluster:
+    command: usr/bin/pg_renamecluster
+  pg-updatedicts:
+    command: usr/sbin/pg_updatedicts
+  pgbackrest:
+    command: usr/bin/pgbackrest
+    plugs:
+      - network
+  pgbackrest-service:
+    command: start-pgbackrest.sh
+    daemon: simple
+    plugs:
+      - network
+      - network-bind
+  pgbench:
+    command: usr/bin/pgbench
+  pgbouncer:
+    command: usr/sbin/pgbouncer
+  prometheus-postgres-exporter:
+    command: usr/bin/prometheus-postgres-exporter
+    daemon: simple
+    install-mode: disable
+    plugs:
+      - network
+      - network-bind
+  psql:
+    command: usr/bin/psql
+  syncobj-admin:
+    command: usr/bin/syncobj_admin
+    plugs:
+      - network
+
+parts:
+  postgres-debs:
+    plugin: nil
+    stage-packages:
+      - perl
+      - perl-base
+      - postgresql
+      - util-linux
+      - pgbouncer
+      - pgbackrest
+      - prometheus-postgres-exporter
+      - python3-psycopg2
+      - python3-pysyncobj
+      - python3-boto3
+      - postgresql-common
+      - postgresql-client-14
+      - postgresql-contrib
+      - postgresql-14-debversion
+      - postgresql-plpython3-14
+      - python-apt-dev
+      - python3-yaml
+      - python3-urllib3
+      - python3-six
+      - python3-pkg-resources
+      - python3-prettytable
+      - python3-psutil
+      - python3-click
+      - python3-cdiff
+      - python3-dateutil
+  patroni:
+    after: [postgres-debs]
+    plugin: dump
+    source: "http://us.archive.ubuntu.com/ubuntu/pool/universe/\
+      p/patroni/patroni_3.0.1-1_all.deb"
+  wrapper:
+    plugin: dump
+    source: snap/local

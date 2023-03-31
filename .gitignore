@@ -1,0 +1,3 @@
+*.snap
+exported.txt
+*__pycache__*
