@@ -10,5 +10,5 @@ jobs:
         id: snapcraft
       - uses: actions/upload-artifact@v3
         with:
-          name: postgres-snap
+          name: snap-artifact
           path: ${{ steps.snapcraft.outputs.snap }}
