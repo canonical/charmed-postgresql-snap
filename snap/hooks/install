@@ -18,7 +18,7 @@ cp $SNAP/config/patroni.yaml $SNAP_DATA/etc/patroni
 cp $SNAP/etc/pgbackrest.conf $SNAP_DATA/etc/pgbackrest
 
 sed -i "s:/var/lib/pgbackrest:$VAR_LIB_PGBACKREST:g" $SNAP_DATA/etc/pgbackrest/pgbackrest.conf
-echo "pg1-path=$SNAP_COMMON/data/db" >> $SNAP_DATA/etc/pgbackrest/pgbackrest.conf
+echo "pg1-path=$SNAP_COMMON/var/lib/postgresql" >> $SNAP_DATA/etc/pgbackrest/pgbackrest.conf
 echo "pg1-user=snap_daemon" >> $SNAP_DATA/etc/pgbackrest/pgbackrest.conf
 
 chown -R 584788:root $SNAP_COMMON/*
