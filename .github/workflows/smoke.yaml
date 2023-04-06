@@ -15,7 +15,7 @@ jobs:
       - uses: actions/checkout@v3
       - uses: actions/download-artifact@v3
         with:
-          name: postgres-snap
+          name: snap-artifact
       - name: Install tox
         run: python3 -m pip install tox
       - name: Smoke Tests
