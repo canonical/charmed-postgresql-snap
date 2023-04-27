@@ -17,6 +17,14 @@ plugs:
   shared-memory:
     private: true
 
+package-repositories:
+  - type: apt
+    ppa: data-platform/patroni
+  - type: apt
+    ppa: data-platform/pgbackrest
+  - type: apt
+    ppa: data-platform/pgbouncer
+
 layout:
   /usr/lib/python3/dist-packages:
     bind: $SNAP/usr/lib/python3/dist-packages
@@ -169,11 +177,7 @@ parts:
       - python3-click
       - python3-cdiff
       - python3-dateutil
-  patroni:
-    after: [postgres-debs]
-    plugin: dump
-    source: "http://us.archive.ubuntu.com/ubuntu/pool/universe/\
-      p/patroni/patroni_3.0.1-1_all.deb"
+      - patroni
   wrapper:
     plugin: dump
     source: snap/local
