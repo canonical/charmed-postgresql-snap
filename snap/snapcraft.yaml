@@ -51,6 +51,13 @@ layout:
   /var/cache/postgresql:
     bind: $SNAP_COMMON/var/cache/postgresql
 
+slots:
+  logs:
+    interface: content
+    source:
+      read:
+        - $SNAP_COMMON/var/log/patroni
+
 apps:
   createdb:
     command: usr/bin/createdb
