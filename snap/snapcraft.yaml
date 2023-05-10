@@ -142,7 +142,7 @@ apps:
   pgbouncer:
     command: usr/sbin/pgbouncer
   prometheus-postgres-exporter:
-    command: usr/bin/prometheus-postgres-exporter
+    command: start-exporter.sh
     daemon: simple
     install-mode: disable
     plugs:
