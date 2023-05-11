@@ -51,12 +51,14 @@ layout:
   /var/cache/postgresql:
     bind: $SNAP_COMMON/var/cache/postgresql
 
+# TODO: Add postgresql log path once configured
 slots:
   logs:
     interface: content
     source:
       read:
         - $SNAP_COMMON/var/log/patroni
+        - $SNAP_COMMON/var/log/pgbackrest
 
 apps:
   createdb:
