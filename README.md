@@ -22,7 +22,7 @@ sudo lxd init --auto
 ### Packing and Installing the Snap
 ```bash
 snapcraft pack
-sudo snap install ./charmed-postgresql*.charm --devmode
+sudo snap install ./charmed-postgresql*.snap --devmode
 ```
 
 ## License
