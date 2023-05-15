@@ -143,6 +143,8 @@ apps:
     command: usr/bin/pgbench
   pgbouncer:
     command: usr/sbin/pgbouncer
+  pgbouncer-server:
+    command: start-pgbouncer.sh
   prometheus-postgres-exporter:
     command: start-exporter.sh
     daemon: simple

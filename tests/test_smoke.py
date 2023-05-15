@@ -42,6 +42,7 @@ def test_all_apps():
             "pg-updatedicts",
             "pg-lsclusters",
             "syncobj-admin",
+            "pgbouncer-server",
         ]
 
         for app, data in snapcraft["apps"].items():
