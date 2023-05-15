@@ -11,8 +11,10 @@ mkdir -p $SNAP_COMMON/postgresql.failed
 mkdir -p $SNAP_COMMON/data/db
 
 mkdir -p $SNAP_COMMON/var/lib/postgresql
+mkdir -p $SNAP_COMMON/var/lib/pgbouncer
 mkdir -p $SNAP_COMMON/var/log/patroni
 mkdir -p $SNAP_COMMON/var/log/pgbackrest
+mkdir -p $SNAP_COMMON/var/log/pgbouncer
 
 cp $SNAP/config/patroni.yaml $SNAP_DATA/etc/patroni
 cp $SNAP/etc/pgbackrest.conf $SNAP_DATA/etc/pgbackrest
