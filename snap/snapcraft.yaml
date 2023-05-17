@@ -175,10 +175,8 @@ parts:
       - python3-boto3
       - patroni
       # Landscape deps
-      - postgresql-contrib
       - postgresql-14-debversion
       - postgresql-plpython3-14
-      - python-apt-dev
   wrapper:
     plugin: dump
     source: snap/local
