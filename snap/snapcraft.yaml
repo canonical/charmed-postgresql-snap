@@ -158,8 +158,6 @@ apps:
       - network-bind
   prometheus-pgbouncer-exporter:
     command: start-pgb-exporter.sh
-    daemon: simple
-    install-mode: disable
     plugs:
       - network
       - network-bind
@@ -179,7 +177,6 @@ parts:
       - pgbouncer
       - pgbackrest
       - prometheus-postgres-exporter
-      - prometheus-pgbouncer-exporter
       - python3-pysyncobj
       - python3-boto3
       - patroni
@@ -189,3 +186,14 @@ parts:
   wrapper:
     plugin: dump
     source: snap/local
+  pgbouncer-exporter:
+    plugin: dump
+    source: >-
+      https://github.com/prometheus-community/pgbouncer_exporter/releases/download/v0.6.0/pgbouncer_exporter-0.6.0.linux-amd64.tar.gz
+    source-type: tar
+    source-checksum: >-
+      sha256/4f921807dbd0fc3c0637f249fb01c48e332e5f06e08fd7bfedf562b71a569133
+    organize:
+      'pgbouncer_exporter': usr/bin/pgbouncer_exporter
+    prime:
+      - -LICENSE
