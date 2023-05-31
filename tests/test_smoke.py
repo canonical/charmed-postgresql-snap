@@ -43,6 +43,7 @@ def test_all_apps():
             "pg-lsclusters",
             "syncobj-admin",
             "pgbouncer-server",
+            "prometheus-pgbouncer-exporter",
         ]
 
         for app, data in snapcraft["apps"].items():
