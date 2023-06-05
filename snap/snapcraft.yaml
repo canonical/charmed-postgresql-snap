@@ -163,6 +163,8 @@ apps:
       - network-bind
   psql:
     command: usr/bin/psql
+    plugs:
+      - network
   syncobj-admin:
     command: usr/bin/syncobj_admin
     plugs:
