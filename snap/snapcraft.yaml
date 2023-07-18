@@ -24,6 +24,8 @@ package-repositories:
     ppa: data-platform/pgbackrest
   - type: apt
     ppa: data-platform/pgbouncer
+  - type: apt
+    ppa: data-platform/postgres-exporter
 
 layout:
   /usr/lib/python3/dist-packages:
