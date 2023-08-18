@@ -6,6 +6,7 @@ description: |
   PostgreSQL is a free and open-source relational database management
   system emphasizing extensibility and SQL compliance.  This package
   includes patroni for managing your PostgreSQL systems.
+license: Apache-2.0
 
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
@@ -190,6 +191,33 @@ parts:
       # Landscape deps
       - postgresql-14-debversion
       - postgresql-plpython3-14
+    organize:
+      usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
+      usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
+      usr/share/doc/pgbouncer/copyright: licenses/COPYRIGHT-pgbouncer
+      usr/share/doc/pgbackrest/copyright: licenses/COPYRIGHT-pgbackrest
+      usr/share/doc/prometheus-postgres-exporter/copyright: >-
+        licenses/COPYRIGHT-prometheus-postgres-exporter
+      usr/share/doc/golang-github-prometheus-community-pgbouncer-exporter/copyright: >-
+        licenses/COPYRIGHT-golang-github-prometheus-community-pgbouncer-exporter
+      usr/share/doc/python3-pysyncobj/copyright: >-
+        licenses/COPYRIGHT-python3-pysyncobj
+      usr/share/doc/python3-boto3/copyright: >-
+        licenses/COPYRIGHT-python3-boto3
+      usr/share/doc/patroni/copyright: licenses/COPYRIGHT-patroni
+      # Landscape licenses
+      usr/share/doc/postgresql-14-debversion/copyright: >-
+        licenses/COPYRIGHT-postgresql-14-debversion
+      usr/share/doc/postgresql-plpython3-14/copyright: >-
+        licenses/COPYRIGHT-postgresql-plpython3-14
+  snap-license:
+    plugin: dump
+    source: .
+    source-type: local
+    stage:
+      - licenses/LICENSE-snap
+    organize:
+      LICENSE: licenses/LICENSE-snap
   wrapper:
     plugin: dump
     source: snap/local
