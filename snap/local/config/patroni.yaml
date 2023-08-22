@@ -2,8 +2,11 @@ scope: "charmed-postgresql"
 namespace: "/postgresql-common/"
 name: postgresql
 
+log:
+  dir: /var/snap/charmed-postgresql/common/var/log/patroni
+
 raft:
-  data_dir: /var/snap/charmed-postgresql/common/raft
+  data_dir: /var/snap/charmed-postgresql/current/etc/patroni/raft
   self_addr: '127.0.0.1:2222'
 
 restapi:
@@ -29,17 +32,15 @@ bootstrap:
         - local   all             all                                     peer
         - host    all             all             127.0.0.1/32            md5
         - host    all             all             ::1/128                 md5
-        - local   replication     all                                     peer
-        - host    replication     all             127.0.0.1/32            md5
-        - host    replication     all             ::1/128                 md5
+        - local   replicator      all                                     peer
+        - host    replicator      all             127.0.0.1/32            md5
+        - host    replicator      all             ::1/128                 md5
 postgresql:
   listen: "*:5432"
   connect_address: 127.0.0.1:5432
-  data_dir: /var/snap/charmed-postgresql/common/postgresql
+  data_dir: /var/snap/charmed-postgresql/common/var/lib/postgresql
   bin_dir: /snap/charmed-postgresql/current/usr/lib/postgresql/14/bin
-  config_dir: /var/snap/charmed-postgresql/current/postgresql
-  pgpass: "/var/snap/charmed-postgresql/current/postgresql/\
-      data/14-postgresql.pgpass"
+  pgpass: /tmp/pgpass
   authentication:
     replication:
       username: "replicator"
