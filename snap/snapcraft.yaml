@@ -84,6 +84,10 @@ apps:
     command: usr/bin/patronictl
     plugs:
       - network
+  constrained-patronictl:
+    command: constrained-patronictl.sh
+    plugs:
+      - network
   patroni-aws:
     command: usr/bin/patroni_aws
   patroni-wale-restore:
@@ -136,6 +140,10 @@ apps:
     command: usr/sbin/pg_updatedicts
   pgbackrest:
     command: usr/bin/pgbackrest
+    plugs:
+      - network
+  constrained-pgbackrest:
+    command: constrained-pgbackrest.sh
     plugs:
       - network
   pgbackrest-service:
