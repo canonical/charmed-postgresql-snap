@@ -188,6 +188,7 @@ parts:
       - python3-pysyncobj
       - python3-boto3
       - patroni
+      - locales-all
       # Landscape deps
       - postgresql-14-debversion
       - postgresql-plpython3-14
