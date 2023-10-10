@@ -103,6 +103,8 @@ apps:
   #   command: usr/bin/pg_receivexlog
   pg-restore:
     command: usr/bin/pg_restore
+    plugs:
+      - network
   pg-upgradecluster:
     command: usr/bin/pg_upgradecluster
   pg-backupcluster:
@@ -111,6 +113,8 @@ apps:
     command: usr/bin/pg_config
   pg-dump:
     command: usr/bin/pg_dump
+    plugs:
+      - network
   pg-lsclusters:
     command: usr/bin/pg_lsclusters
   pg-recvlogical:
@@ -129,6 +133,8 @@ apps:
     command: usr/bin/pg_ctlcluster
   pg-dumpall:
     command: usr/bin/pg_dumpall
+    plugs:
+      - network
   pg-receivewal:
     command: usr/bin/pg_receivewal
   pg-renamecluster:
