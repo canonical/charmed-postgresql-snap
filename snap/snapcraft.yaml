@@ -198,6 +198,7 @@ parts:
       # Landscape deps
       - postgresql-14-debversion
       - postgresql-plpython3-14
+      - postgresql-contrib
   wrapper:
     plugin: dump
     source: snap/local
