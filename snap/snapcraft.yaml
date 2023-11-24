@@ -54,6 +54,18 @@ layout:
     bind: $SNAP/usr/lib/postgresql/14
   /var/cache/postgresql:
     bind: $SNAP_COMMON/var/cache/postgresql
+  $SNAP/usr/share/postgresql/14/extension/postgis.control:
+    symlink: $SNAP/usr/share/postgresql/14/extension/postgis-3.control
+  $SNAP/usr/share/postgresql/14/extension/address_standardizer.control:
+    symlink: $SNAP/usr/share/postgresql/14/extension/address_standardizer-3.control
+  $SNAP/usr/share/postgresql/14/extension/address_standardizer_data_us.control:
+    symlink: $SNAP/usr/share/postgresql/14/extension/address_standardizer_data_us-3.control
+  $SNAP/usr/share/postgresql/14/extension/postgis_raster.control:
+    symlink: $SNAP/usr/share/postgresql/14/extension/postgis_raster-3.control
+  $SNAP/usr/share/postgresql/14/extension/postgis_tiger_geocoder.control:
+    symlink: $SNAP/usr/share/postgresql/14/extension/postgis_tiger_geocoder-3.control
+  $SNAP/usr/share/postgresql/14/extension/postgis_topology.control:
+    symlink: $SNAP/usr/share/postgresql/14/extension/postgis_topology-3.control
 
 # TODO: Add postgresql log path once configured
 slots:
@@ -76,6 +88,9 @@ apps:
     daemon: simple
     install-mode: disable
     restart-condition: always
+    environment:
+      TCL_LIBRARY: $SNAP/usr/share/tcltk/tcl8.6
+      "LD_LIBRARY_PATH": $LD_LIBRARY_PATH:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/lapack
     plugs:
       - network
       - network-bind
@@ -199,6 +214,20 @@ parts:
       - postgresql-14-debversion
       - postgresql-plpython3-14
       - postgresql-contrib
+      - postgresql-plperl-14
+      - postgresql-14-similarity
+      - postgresql-14-orafce
+      - postgresql-14-hypopg
+      - postgresql-14-hll
+      - postgresql-14-ip4r
+      - postgresql-pltcl-14
+      - postgresql-14-prefix
+      - postgresql-14-rdkit
+      - postgresql-14-tds-fdw
+      - postgresql-14-icu-ext
+      - postgresql-14-postgis-3
+      - postgresql-14-postgis-3-scripts
+
   wrapper:
     plugin: dump
     source: snap/local
