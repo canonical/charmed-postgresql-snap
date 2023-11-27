@@ -57,13 +57,16 @@ layout:
   $SNAP/usr/share/postgresql/14/extension/postgis.control:
     symlink: $SNAP/usr/share/postgresql/14/extension/postgis-3.control
   $SNAP/usr/share/postgresql/14/extension/address_standardizer.control:
-    symlink: $SNAP/usr/share/postgresql/14/extension/address_standardizer-3.control
+    symlink: "$SNAP/usr/share/postgresql/14/extension/\
+    address_standardizer-3.control"
   $SNAP/usr/share/postgresql/14/extension/address_standardizer_data_us.control:
-    symlink: $SNAP/usr/share/postgresql/14/extension/address_standardizer_data_us-3.control
+    symlink: "$SNAP/usr/share/postgresql/14/extension/\
+    address_standardizer_data_us-3.control"
   $SNAP/usr/share/postgresql/14/extension/postgis_raster.control:
     symlink: $SNAP/usr/share/postgresql/14/extension/postgis_raster-3.control
   $SNAP/usr/share/postgresql/14/extension/postgis_tiger_geocoder.control:
-    symlink: $SNAP/usr/share/postgresql/14/extension/postgis_tiger_geocoder-3.control
+    symlink: "$SNAP/usr/share/postgresql/14/extension/\
+    postgis_tiger_geocoder-3.control"
   $SNAP/usr/share/postgresql/14/extension/postgis_topology.control:
     symlink: $SNAP/usr/share/postgresql/14/extension/postgis_topology-3.control
 
@@ -90,7 +93,8 @@ apps:
     restart-condition: always
     environment:
       TCL_LIBRARY: $SNAP/usr/share/tcltk/tcl8.6
-      "LD_LIBRARY_PATH": $LD_LIBRARY_PATH:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/lapack
+      "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:$SNAP/usr/lib/\
+      $CRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/lapack"
     plugs:
       - network
       - network-bind
