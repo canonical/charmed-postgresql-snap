@@ -1,3 +1,4 @@
+# yamllint disable rule:line-length
 name: charmed-postgresql # you probably want to 'snapcraft register <name>'
 base: core22 # the base snap is the execution environment for this snap
 version: '14.9' # just for humans, typically '1.2+git' or '1.3.2'
@@ -185,20 +186,42 @@ parts:
   postgres-debs:
     plugin: nil
     stage-packages:
-      - postgresql
+      - postgresql=14+238
       - util-linux
-      - pgbouncer
-      - pgbackrest
-      - prometheus-postgres-exporter
-      - golang-github-prometheus-community-pgbouncer-exporter
-      - python3-pysyncobj
+      - pgbouncer=1.21.0-0ubuntu0.22.04.1~ppa1
+      - pgbackrest=2.48-0ubuntu0.22.04.1~ppa1
+      - prometheus-postgres-exporter=0.12.1-0ubuntu0.22.04.1~ppa1
+      - golang-github-prometheus-community-pgbouncer-exporter=0.7.0-0ubuntu0.22.04.1~ppa1
+      - python3-pysyncobj=0.3.10-2
       - python3-boto3
-      - patroni
+      - patroni=3.1.2-0ubuntu0.22.04.1~ppa1
       - locales-all
       # Landscape deps
-      - postgresql-14-debversion
-      - postgresql-plpython3-14
-      - postgresql-contrib
+      - postgresql-14-debversion=1.1.1-5
+      - postgresql-plpython3-14=14.9-0ubuntu0.22.04.1
+      - postgresql-contrib=14+238
+    organize:
+      usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
+      usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
+      usr/share/doc/pgbouncer/copyright: licenses/COPYRIGHT-pgbouncer
+      usr/share/doc/pgbackrest/copyright: licenses/COPYRIGHT-pgbackrest
+      usr/share/doc/prometheus-postgres-exporter/copyright: licences/COPYRIGHT-prometheus-postgres-exporter
+      usr/share/doc/golang-github-prometheus-community-pgbouncer-exporter/copyright: licenses/COPYRIGHT-golang-github-prometheus-community-pgbouncer-exporter
+      usr/share/doc/python3-pysyncobj/copyright: licenses/COPYRIGHT-python3-pysyncobj
+      usr/share/doc/python3-boto3/copyright: licenses/COPYRIGHT-python3-boto3
+      usr/share/doc/patroni/copyright: licenses/COPYRIGHT-patroni
+      usr/share/doc/locales-all/copyright: licenses/COPYRIGHT-locales-all
+      usr/share/doc/postgresql-14-debversion/copyright: licenses/COPYRIGHT-postgresql-14-debversion
+      usr/share/doc/postgresql-plpython3-14/copyright: licenses/COPYRIGHT-postgresql-plpython3-14
+      usr/share/doc/postgresql-contrib/copyright: licenses/COPYRIGHT-postgresql-contrib
+  snap-license:
+    plugin: dump
+    source: .
+    source-type: local
+    stage:
+      - licenses/LICENSE-snap
+    organize:
+      LICENSE: licenses/LICENSE-snap
   wrapper:
     plugin: dump
     source: snap/local
