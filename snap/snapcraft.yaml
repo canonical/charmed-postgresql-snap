@@ -55,6 +55,21 @@ layout:
     bind: $SNAP/usr/lib/postgresql/14
   /var/cache/postgresql:
     bind: $SNAP_COMMON/var/cache/postgresql
+  $SNAP/usr/share/postgresql/14/extension/postgis.control:
+    symlink: $SNAP/usr/share/postgresql/14/extension/postgis-3.control
+  $SNAP/usr/share/postgresql/14/extension/address_standardizer.control:
+    symlink: "$SNAP/usr/share/postgresql/14/extension/\
+    address_standardizer-3.control"
+  $SNAP/usr/share/postgresql/14/extension/address_standardizer_data_us.control:
+    symlink: "$SNAP/usr/share/postgresql/14/extension/\
+    address_standardizer_data_us-3.control"
+  $SNAP/usr/share/postgresql/14/extension/postgis_raster.control:
+    symlink: $SNAP/usr/share/postgresql/14/extension/postgis_raster-3.control
+  $SNAP/usr/share/postgresql/14/extension/postgis_tiger_geocoder.control:
+    symlink: "$SNAP/usr/share/postgresql/14/extension/\
+    postgis_tiger_geocoder-3.control"
+  $SNAP/usr/share/postgresql/14/extension/postgis_topology.control:
+    symlink: $SNAP/usr/share/postgresql/14/extension/postgis_topology-3.control
 
 # TODO: Add postgresql log path once configured
 slots:
@@ -77,6 +92,10 @@ apps:
     daemon: simple
     install-mode: disable
     restart-condition: always
+    environment:
+      TCL_LIBRARY: $SNAP/usr/share/tcltk/tcl8.6
+      "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:$SNAP/usr/lib/\
+      $CRAFT_ARCH_TRIPLET/blas:$SNAP/usr/lib/$CRAFT_ARCH_TRIPLET/lapack"
     plugs:
       - network
       - network-bind
@@ -198,8 +217,21 @@ parts:
       - locales-all
       # Landscape deps
       - postgresql-14-debversion=1.1.1-5
-      - postgresql-plpython3-14=14.9-0ubuntu0.22.04.1
+      - postgresql-plpython3-14=14.10-0ubuntu0.22.04.1
       - postgresql-contrib=14+238
+      - postgresql-plperl-14
+      - postgresql-14-similarity
+      - postgresql-14-orafce
+      - postgresql-14-hypopg
+      - postgresql-14-hll
+      - postgresql-14-ip4r
+      - postgresql-pltcl-14
+      - postgresql-14-prefix
+      - postgresql-14-rdkit
+      - postgresql-14-tds-fdw
+      - postgresql-14-icu-ext
+      - postgresql-14-postgis-3
+      - postgresql-14-postgis-3-scripts
     organize:
       usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
       usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
@@ -214,6 +246,18 @@ parts:
       usr/share/doc/postgresql-14-debversion/copyright: licenses/COPYRIGHT-postgresql-14-debversion
       usr/share/doc/postgresql-plpython3-14/copyright: licenses/COPYRIGHT-postgresql-plpython3-14
       usr/share/doc/postgresql-contrib/copyright: licenses/COPYRIGHT-postgresql-contrib
+      usr/share/doc/postgresql-plperl-14/copyright: licenses/COPYRIGHT-plperl
+      usr/share/doc/postgresql-similarity-14/copyright: licenses/COPYRIGHT-similarity
+      usr/share/doc/postgresql-orafce-14/copyright: licenses/COPYRIGHT-orafce
+      usr/share/doc/postgresql-14-hypopg/copyright: licenses/COPYRIGHT-hypopg
+      usr/share/doc/postgresql-14-hll/copyright: licenses/COPYRIGHT-hll
+      usr/share/doc/postgresql-14-ip4r/copyright: licenses/COPYRIGHT-ip4r
+      usr/share/doc/postgresql-pltcl-14/copyright: licenses/COPYRIGHT-pltcl
+      usr/share/doc/postgresql-14-prefix/copyright: licenses/COPYRIGHT-prefix
+      usr/share/doc/postgresql-14-rdkit/copyright: licenses/COPYRIGHT-rdkit
+      usr/share/doc/postgresql-14-tds-fdw/copyright: licenses/COPYRIGHT-tds-fdw
+      usr/share/doc/postgresql-14-icu-ext/copyright: licenses/COPYRIGHT-icu-ext
+      usr/share/doc/postgresql-14-postgis-3/copyright: licenses/COPYRIGHT-postgis
   snap-license:
     plugin: dump
     source: .
