@@ -29,6 +29,8 @@ package-repositories:
     ppa: data-platform/postgres-exporter
   - type: apt
     ppa: data-platform/pgbouncer-exporter
+  - type: apt
+    ppa: data-platform/pgvector
 
 layout:
   /usr/lib/python3/dist-packages:
@@ -232,6 +234,7 @@ parts:
       - postgresql-14-icu-ext
       - postgresql-14-postgis-3
       - postgresql-14-postgis-3-scripts
+      - postgresql-14-pgvector
     organize:
       usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
       usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
