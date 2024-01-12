@@ -261,6 +261,7 @@ parts:
       usr/share/doc/postgresql-14-tds-fdw/copyright: licenses/COPYRIGHT-tds-fdw
       usr/share/doc/postgresql-14-icu-ext/copyright: licenses/COPYRIGHT-icu-ext
       usr/share/doc/postgresql-14-postgis-3/copyright: licenses/COPYRIGHT-postgis
+      usr/share/doc/postgresql-14-pgvector/copyright: licenses/COPYRIGHT-pgvector
   snap-license:
     plugin: dump
     source: .
