@@ -31,6 +31,11 @@ package-repositories:
     ppa: data-platform/pgbouncer-exporter
   - type: apt
     ppa: data-platform/pgvector
+  - type: apt
+    components: [main]
+    suites: [jammy]
+    key-id: 1005FB68604CE9B8F6879CF759F18EDF47F24417
+    url: https://packagecloud.io/timescale/timescaledb/ubuntu/
 
 layout:
   /usr/lib/python3/dist-packages:
@@ -235,6 +240,7 @@ parts:
       - postgresql-14-postgis-3
       - postgresql-14-postgis-3-scripts
       - postgresql-14-pgvector
+      - timescaledb-2-postgresql-14
     organize:
       usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
       usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
@@ -262,6 +268,7 @@ parts:
       usr/share/doc/postgresql-14-icu-ext/copyright: licenses/COPYRIGHT-icu-ext
       usr/share/doc/postgresql-14-postgis-3/copyright: licenses/COPYRIGHT-postgis
       usr/share/doc/postgresql-14-pgvector/copyright: licenses/COPYRIGHT-pgvector
+      usr/share/doc/timescaledb-2-postgresql-14/copyright: licenses/COPYRIGHT-timescaledb
   snap-license:
     plugin: dump
     source: .
