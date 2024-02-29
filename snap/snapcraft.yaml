@@ -8,6 +8,11 @@ description: |
   system emphasizing extensibility and SQL compliance.  This package
   includes patroni for managing your PostgreSQL systems.
 
+architectures:
+  - build-on: [amd64]
+    build-for: [amd64]
+  - build-on: [arm64]
+    build-for: [arm64]
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
 
