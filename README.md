@@ -1,5 +1,5 @@
 # Charmed PostgreSQL Snap
-[![.github/workflows/publish.yaml](https://github.com/canonical/charmed-postgresql-snap/actions/workflows/publish.yaml/badge.svg)](https://github.com/canonical/charmed-postgresql-snap/actions/workflows/publish.yaml)
+[![Release to Snap Store](https://github.com/canonical/charmed-postgresql-snap/actions/workflows/release.yaml/badge.svg)](https://github.com/canonical/charmed-postgresql-snap/actions/workflows/release.yaml)
 
 This repository contains the packaging metadata for creating a snap of PostgreSQL built from the official Ubuntu repositories.  For more information on snaps, visit [snapcraft.io](https://snapcraft.io/). 
 
