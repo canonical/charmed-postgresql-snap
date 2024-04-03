@@ -38,6 +38,8 @@ package-repositories:
     ppa: data-platform/pgvector
   - type: apt
     ppa: data-platform/python-pysyncobj
+  - type: apt
+    ppa: data-platform/pgbackrest-exporter
 
 layout:
   /usr/lib/python3/dist-packages:
@@ -181,6 +183,13 @@ apps:
     plugs:
       - network
       - network-bind
+  pgbackrest-exporter:
+    command: start-pgbackrest-exporter.sh
+    daemon: simple
+    install-mode: disable
+    plugs:
+      - network
+      - network-bind
   pgbench:
     command: usr/bin/pgbench
   pgbouncer:
@@ -223,7 +232,8 @@ parts:
       - golang-github-prometheus-community-pgbouncer-exporter=0.7.0-0ubuntu0.22.04.1~ppa1
       - python3-pysyncobj=0.3.12-0ubuntu0.22.04.1~ppa1
       - python3-boto3
-      - patroni=3.1.2-0ubuntu0.22.04.1~ppa1
+      - patroni=3.2.2-0ubuntu0.22.04.1~ppa1
+      - golang-github-woblerr-pgbackrest-exporter=0.16.2+ds1-0ubuntu0.22.04.1~ppa1
       - locales-all
       # Landscape deps
       - postgresql-14-debversion=1.1.1-5
@@ -270,6 +280,7 @@ parts:
       usr/share/doc/postgresql-14-icu-ext/copyright: licenses/COPYRIGHT-icu-ext
       usr/share/doc/postgresql-14-postgis-3/copyright: licenses/COPYRIGHT-postgis
       usr/share/doc/postgresql-14-pgvector/copyright: licenses/COPYRIGHT-pgvector
+      usr/share/doc/golang-github-woblerr-pgbackrest-exporter/copyright: licenses/COPYRIGHT-pgbackrest-exporter
   snap-license:
     plugin: dump
     source: .
