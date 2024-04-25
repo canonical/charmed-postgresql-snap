@@ -232,7 +232,7 @@ parts:
       - golang-github-prometheus-community-pgbouncer-exporter=0.7.0-0ubuntu0.22.04.1~ppa1
       - python3-pysyncobj=0.3.12-0ubuntu0.22.04.1~ppa1
       - python3-boto3
-      - patroni=3.2.2-0ubuntu0.22.04.1~ppa1
+      - patroni=3.1.2-0ubuntu0.22.04.1~ppa2
       - golang-github-woblerr-pgbackrest-exporter=0.16.2+ds1-0ubuntu0.22.04.1~ppa1
       - locales-all
       # Landscape deps
