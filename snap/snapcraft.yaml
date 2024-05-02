@@ -42,6 +42,8 @@ package-repositories:
     ppa: data-platform/pgbackrest-exporter
   - type: apt
     ppa: yevss/postgresql-14-timescaledb
+#  - type: apt
+#    ppa: data-platform/postgresql-14-timescaledb
 
 layout:
   /usr/lib/python3/dist-packages:
