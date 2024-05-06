@@ -41,7 +41,7 @@ package-repositories:
   - type: apt
     ppa: data-platform/pgbackrest-exporter
   - type: apt
-    ppa: yevss/postgresql-14-timescaledb
+    ppa: data-platform/postgresql-14-timescaledb
 
 layout:
   /usr/lib/python3/dist-packages:
@@ -255,7 +255,7 @@ parts:
       - postgresql-14-postgis-3
       - postgresql-14-postgis-3-scripts
       - postgresql-14-pgvector
-      - timescaledb-postgresql-14=2.14.2-2
+      - timescaledb
     organize:
       usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
       usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
