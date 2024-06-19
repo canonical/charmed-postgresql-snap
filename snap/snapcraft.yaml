@@ -182,6 +182,7 @@ apps:
   pgbackrest-service:
     command: start-pgbackrest.sh
     daemon: simple
+    install-mode: disable
     plugs:
       - network
       - network-bind
