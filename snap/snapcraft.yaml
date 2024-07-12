@@ -240,7 +240,7 @@ parts:
       - locales-all
       # Landscape deps
       - postgresql-14-debversion=1.1.1-5
-      - postgresql-plpython3-14
+      - postgresql-plpython3-14=14.12-0ubuntu0.22.04.1
       - postgresql-contrib=14+238
       - postgresql-plperl-14
       - postgresql-14-similarity
