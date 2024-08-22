@@ -256,6 +256,7 @@ parts:
       - postgresql-14-postgis-3
       - postgresql-14-postgis-3-scripts
       - postgresql-14-pgvector
+      - postgresql-14-pgaudit
       - timescaledb
     organize:
       usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
@@ -284,6 +285,7 @@ parts:
       usr/share/doc/postgresql-14-icu-ext/copyright: licenses/COPYRIGHT-icu-ext
       usr/share/doc/postgresql-14-postgis-3/copyright: licenses/COPYRIGHT-postgis
       usr/share/doc/postgresql-14-pgvector/copyright: licenses/COPYRIGHT-pgvector
+      usr/share/doc/postgresql-14-pgaudit/copyright: licenses/COPYRIGHT-pgaudit
       usr/share/doc/timescaledb-postgresql-14/copyright: licenses/COPYRIGHT-timescaledb
       usr/share/doc/golang-github-woblerr-pgbackrest-exporter/copyright: licenses/COPYRIGHT-pgbackrest-exporter
   snap-license:
