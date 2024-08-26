@@ -10,6 +10,7 @@ on:
   pull_request:
 
 jobs:
+  lint:
     name: Lint
     uses: canonical/data-platform-workflows/.github/workflows/lint.yaml@v12.6.0
 
