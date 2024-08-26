@@ -77,3 +77,12 @@ def test_all_services():
                 subprocess.run(f"sudo snap stop {snapcraft['name']}.{app}".split())
 
                 assert "active" in str(service.stdout)
+
+
+@pytest.mark.run(after="test_install")
+def test_version():
+    with open("snap/snapcraft.yaml") as file:
+        snapcraft = yaml.safe_load(file)
+        snap_version = snapcraft['version']
+        app_version = subprocess.check_output([f"{snapcraft['name']}.pg-isready", "--version"]).decode().split(" ")[2]
+        assert snap_version == app_version
