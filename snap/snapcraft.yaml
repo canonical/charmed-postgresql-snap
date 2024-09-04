@@ -25,7 +25,7 @@ plugs:
 
 package-repositories:
   - type: apt
-    ppa: data-platform/patroni
+    ppa: lvoytek/dp-patroni
   - type: apt
     ppa: data-platform/pgbackrest
   - type: apt
@@ -235,7 +235,7 @@ parts:
       - golang-github-prometheus-community-pgbouncer-exporter=0.7.0-0ubuntu0.22.04.1~ppa1
       - python3-pysyncobj=0.3.12-0ubuntu0.22.04.1~ppa1
       - python3-boto3
-      - patroni=3.1.2-0ubuntu0.22.04.1~ppa2
+      - patroni=3.3.2-0ubuntu1~ppa1
       - golang-github-woblerr-pgbackrest-exporter=0.16.2+ds1-0ubuntu0.22.04.1~ppa1
       - locales-all
       # Landscape deps
