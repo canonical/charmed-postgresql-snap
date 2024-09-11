@@ -24,6 +24,7 @@ sed -i "s:/var/lib/pgbackrest:$VAR_LIB_PGBACKREST:g" $SNAP_DATA/etc/pgbackrest/p
 echo "pg1-path=$SNAP_COMMON/var/lib/postgresql" >> $SNAP_DATA/etc/pgbackrest/pgbackrest.conf
 echo "pg1-user=snap_daemon" >> $SNAP_DATA/etc/pgbackrest/pgbackrest.conf
 touch $SNAP_COMMON/.psql_history
+chown 584788:root $SNAP_COMMON/.psql_history
 
 chown -R 584788:root $SNAP_COMMON/*
 chown -R 584788:root $SNAP_DATA/*
