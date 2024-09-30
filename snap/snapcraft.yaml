@@ -230,7 +230,7 @@ parts:
       - postgresql=14+238
       - util-linux
       - pgbouncer=1.21.0-0ubuntu0.22.04.1~ppa1
-      - pgbackrest=2.48-0ubuntu0.22.04.1~ppa1
+      - pgbackrest=2.53-0ubuntu0.22.04.1~ppa1
       - prometheus-postgres-exporter=0.12.1-0ubuntu0.22.04.1~ppa1
       - golang-github-prometheus-community-pgbouncer-exporter=0.7.0-0ubuntu0.22.04.1~ppa1
       - python3-pysyncobj=0.3.12-0ubuntu0.22.04.1~ppa1
