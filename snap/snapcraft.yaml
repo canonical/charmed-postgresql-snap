@@ -29,8 +29,6 @@ package-repositories:
   - type: apt
     ppa: data-platform/pgbackrest
   - type: apt
-    ppa: lvoytek/dp-pgbackrest
-  - type: apt
     ppa: data-platform/pgbouncer
   - type: apt
     ppa: data-platform/postgres-exporter
