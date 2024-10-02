@@ -7,11 +7,7 @@ concurrency:
   cancel-in-progress: true
 
 on:
-  push:
-    branches:
-      - 14/edge
-    paths:
-      - snap
+  worflow_dispatch:
 
 jobs:
   build:
