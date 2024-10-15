@@ -216,6 +216,8 @@ apps:
       - network-bind
   psql:
     command: usr/bin/psql
+    environment:
+      PSQLRC: /snap/charmed-postgresql/current/etc/postgresql-common/.psqlrc
     plugs:
       - network
   syncobj-admin:
