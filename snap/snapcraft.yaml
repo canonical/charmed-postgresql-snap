@@ -22,24 +22,6 @@ plugs:
   shared-memory:
     private: true
 
-package-repositories:
-  - type: apt
-    ppa: data-platform/patroni
-  - type: apt
-    ppa: data-platform/pgbackrest
-  - type: apt
-    ppa: data-platform/pgbouncer
-  - type: apt
-    ppa: data-platform/postgres-exporter
-  - type: apt
-    ppa: data-platform/pgbouncer-exporter
-  - type: apt
-    ppa: data-platform/pgvector
-  - type: apt
-    ppa: data-platform/python-pysyncobj
-  - type: apt
-    ppa: data-platform/pgbackrest-exporter
-
 layout:
   /usr/lib/python3/dist-packages:
     bind: $SNAP/usr/lib/python3/dist-packages
