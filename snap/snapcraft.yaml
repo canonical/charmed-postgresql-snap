@@ -1,18 +1,17 @@
 # yamllint disable rule:line-length
 name: charmed-postgresql # you probably want to 'snapcraft register <name>'
-base: core22 # the base snap is the execution environment for this snap
-version: '14.13' # just for humans, typically '1.2+git' or '1.3.2'
+base: core24 # the base snap is the execution environment for this snap
+version: '16' # just for humans, typically '1.2+git' or '1.3.2'
 summary: PostgreSQL in a snap.
 description: |
   PostgreSQL is a free and open-source relational database management
   system emphasizing extensibility and SQL compliance.  This package
   includes patroni for managing your PostgreSQL systems.
 
-architectures:
-  - build-on: [amd64]
+platforms:
+  amd64:
+    build-on: [amd64]
     build-for: [amd64]
-  - build-on: [arm64]
-    build-for: [arm64]
 grade: stable # must be 'stable' to release into candidate/stable channels
 confinement: strict # use 'strict' once you have the right plugs and slots
 
@@ -40,8 +39,6 @@ package-repositories:
     ppa: data-platform/python-pysyncobj
   - type: apt
     ppa: data-platform/pgbackrest-exporter
-  - type: apt
-    ppa: data-platform/postgresql-14-timescaledb
 
 layout:
   /usr/lib/python3/dist-packages:
@@ -64,25 +61,25 @@ layout:
     bind: $SNAP/usr/share/perl
   /usr/local/lib/site_perl:
     bind: $SNAP/usr/local/lib/site_perl
-  /usr/lib/postgresql/14:
-    bind: $SNAP/usr/lib/postgresql/14
+  /usr/lib/postgresql/16:
+    bind: $SNAP/usr/lib/postgresql/16
   /var/cache/postgresql:
     bind: $SNAP_COMMON/var/cache/postgresql
-  $SNAP/usr/share/postgresql/14/extension/postgis.control:
-    symlink: $SNAP/usr/share/postgresql/14/extension/postgis-3.control
-  $SNAP/usr/share/postgresql/14/extension/address_standardizer.control:
-    symlink: "$SNAP/usr/share/postgresql/14/extension/\
+  $SNAP/usr/share/postgresql/16/extension/postgis.control:
+    symlink: $SNAP/usr/share/postgresql/16/extension/postgis-3.control
+  $SNAP/usr/share/postgresql/16/extension/address_standardizer.control:
+    symlink: "$SNAP/usr/share/postgresql/16/extension/\
     address_standardizer-3.control"
-  $SNAP/usr/share/postgresql/14/extension/address_standardizer_data_us.control:
-    symlink: "$SNAP/usr/share/postgresql/14/extension/\
+  $SNAP/usr/share/postgresql/16/extension/address_standardizer_data_us.control:
+    symlink: "$SNAP/usr/share/postgresql/16/extension/\
     address_standardizer_data_us-3.control"
-  $SNAP/usr/share/postgresql/14/extension/postgis_raster.control:
-    symlink: $SNAP/usr/share/postgresql/14/extension/postgis_raster-3.control
-  $SNAP/usr/share/postgresql/14/extension/postgis_tiger_geocoder.control:
-    symlink: "$SNAP/usr/share/postgresql/14/extension/\
+  $SNAP/usr/share/postgresql/16/extension/postgis_raster.control:
+    symlink: $SNAP/usr/share/postgresql/16/extension/postgis_raster-3.control
+  $SNAP/usr/share/postgresql/16/extension/postgis_tiger_geocoder.control:
+    symlink: "$SNAP/usr/share/postgresql/16/extension/\
     postgis_tiger_geocoder-3.control"
-  $SNAP/usr/share/postgresql/14/extension/postgis_topology.control:
-    symlink: $SNAP/usr/share/postgresql/14/extension/postgis_topology-3.control
+  $SNAP/usr/share/postgresql/16/extension/postgis_topology.control:
+    symlink: $SNAP/usr/share/postgresql/16/extension/postgis_topology-3.control
 
 # TODO: Add postgresql log path once configured
 slots:
@@ -162,7 +159,7 @@ apps:
   pg-conftool:
     command: usr/bin/pg_conftool
   pg-ctl:
-    command: usr/lib/postgresql/14/bin/pg_ctl
+    command: usr/lib/postgresql/16/bin/pg_ctl
   pg-ctlcluster:
     command: usr/bin/pg_ctlcluster
   pg-dumpall:
@@ -227,37 +224,36 @@ parts:
   postgres-debs:
     plugin: nil
     stage-packages:
-      - postgresql=14+238
+      - postgresql
       - util-linux
-      - pgbouncer=1.21.0-0ubuntu0.22.04.1~ppa1
-      - pgbackrest=2.53-1ubuntu0.22.04.1~ppa1
-      - prometheus-postgres-exporter=0.12.1-0ubuntu0.22.04.1~ppa1
-      - golang-github-prometheus-community-pgbouncer-exporter=0.7.0-0ubuntu0.22.04.1~ppa1
-      - python3-pysyncobj=0.3.12-0ubuntu0.22.04.1~ppa1
+      - pgbouncer
+      - pgbackrest
+      - prometheus-postgres-exporter
+      - golang-github-prometheus-community-pgbouncer-exporter
+      - python3-pysyncobj
       - python3-boto3
-      - patroni=3.1.2-0ubuntu0.22.04.1~ppa2
-      - golang-github-woblerr-pgbackrest-exporter=0.16.2+ds1-0ubuntu0.22.04.1~ppa1
+      - patroni
+      - golang-github-woblerr-pgbackrest-exporter
       - locales-all
       # Landscape deps
-      - postgresql-14-debversion=1.1.1-5
-      - postgresql-plpython3-14=14.13-0ubuntu0.22.04.1
-      - postgresql-contrib=14+238
-      - postgresql-plperl-14
-      - postgresql-14-similarity
-      - postgresql-14-orafce
-      - postgresql-14-hypopg
-      - postgresql-14-hll
-      - postgresql-14-ip4r
-      - postgresql-pltcl-14
-      - postgresql-14-prefix
-      - postgresql-14-rdkit
-      - postgresql-14-tds-fdw
-      - postgresql-14-icu-ext
-      - postgresql-14-postgis-3
-      - postgresql-14-postgis-3-scripts
-      - postgresql-14-pgvector
-      - postgresql-14-pgaudit
-      - timescaledb
+      - postgresql-16-debversion
+      - postgresql-plpython3-16
+      - postgresql-contrib
+      - postgresql-plperl-16
+      - postgresql-16-similarity
+      - postgresql-16-orafce
+      - postgresql-16-hypopg
+      - postgresql-16-hll
+      - postgresql-16-ip4r
+      - postgresql-pltcl-16
+      - postgresql-16-prefix
+      - postgresql-16-rdkit
+      - postgresql-16-tds-fdw
+      - postgresql-16-icu-ext
+      - postgresql-16-postgis-3
+      - postgresql-16-postgis-3-scripts
+      - postgresql-16-pgvector
+      - postgresql-16-pgaudit
     organize:
       usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
       usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
@@ -269,24 +265,24 @@ parts:
       usr/share/doc/python3-boto3/copyright: licenses/COPYRIGHT-python3-boto3
       usr/share/doc/patroni/copyright: licenses/COPYRIGHT-patroni
       usr/share/doc/locales-all/copyright: licenses/COPYRIGHT-locales-all
-      usr/share/doc/postgresql-14-debversion/copyright: licenses/COPYRIGHT-postgresql-14-debversion
-      usr/share/doc/postgresql-plpython3-14/copyright: licenses/COPYRIGHT-postgresql-plpython3-14
+      usr/share/doc/postgresql-16-debversion/copyright: licenses/COPYRIGHT-postgresql-16-debversion
+      usr/share/doc/postgresql-plpython3-16/copyright: licenses/COPYRIGHT-postgresql-plpython3-16
       usr/share/doc/postgresql-contrib/copyright: licenses/COPYRIGHT-postgresql-contrib
-      usr/share/doc/postgresql-plperl-14/copyright: licenses/COPYRIGHT-plperl
-      usr/share/doc/postgresql-similarity-14/copyright: licenses/COPYRIGHT-similarity
-      usr/share/doc/postgresql-orafce-14/copyright: licenses/COPYRIGHT-orafce
-      usr/share/doc/postgresql-14-hypopg/copyright: licenses/COPYRIGHT-hypopg
-      usr/share/doc/postgresql-14-hll/copyright: licenses/COPYRIGHT-hll
-      usr/share/doc/postgresql-14-ip4r/copyright: licenses/COPYRIGHT-ip4r
-      usr/share/doc/postgresql-pltcl-14/copyright: licenses/COPYRIGHT-pltcl
-      usr/share/doc/postgresql-14-prefix/copyright: licenses/COPYRIGHT-prefix
-      usr/share/doc/postgresql-14-rdkit/copyright: licenses/COPYRIGHT-rdkit
-      usr/share/doc/postgresql-14-tds-fdw/copyright: licenses/COPYRIGHT-tds-fdw
-      usr/share/doc/postgresql-14-icu-ext/copyright: licenses/COPYRIGHT-icu-ext
-      usr/share/doc/postgresql-14-postgis-3/copyright: licenses/COPYRIGHT-postgis
-      usr/share/doc/postgresql-14-pgvector/copyright: licenses/COPYRIGHT-pgvector
-      usr/share/doc/postgresql-14-pgaudit/copyright: licenses/COPYRIGHT-pgaudit
-      usr/share/doc/timescaledb-postgresql-14/copyright: licenses/COPYRIGHT-timescaledb
+      usr/share/doc/postgresql-plperl-16/copyright: licenses/COPYRIGHT-plperl
+      usr/share/doc/postgresql-similarity-16/copyright: licenses/COPYRIGHT-similarity
+      usr/share/doc/postgresql-orafce-16/copyright: licenses/COPYRIGHT-orafce
+      usr/share/doc/postgresql-16-hypopg/copyright: licenses/COPYRIGHT-hypopg
+      usr/share/doc/postgresql-16-hll/copyright: licenses/COPYRIGHT-hll
+      usr/share/doc/postgresql-16-ip4r/copyright: licenses/COPYRIGHT-ip4r
+      usr/share/doc/postgresql-pltcl-16/copyright: licenses/COPYRIGHT-pltcl
+      usr/share/doc/postgresql-16-prefix/copyright: licenses/COPYRIGHT-prefix
+      usr/share/doc/postgresql-16-rdkit/copyright: licenses/COPYRIGHT-rdkit
+      usr/share/doc/postgresql-16-tds-fdw/copyright: licenses/COPYRIGHT-tds-fdw
+      usr/share/doc/postgresql-16-icu-ext/copyright: licenses/COPYRIGHT-icu-ext
+      usr/share/doc/postgresql-16-postgis-3/copyright: licenses/COPYRIGHT-postgis
+      usr/share/doc/postgresql-16-pgvector/copyright: licenses/COPYRIGHT-pgvector
+      usr/share/doc/postgresql-16-pgaudit/copyright: licenses/COPYRIGHT-pgaudit
+      usr/share/doc/timescaledb-postgresql-16/copyright: licenses/COPYRIGHT-timescaledb
       usr/share/doc/golang-github-woblerr-pgbackrest-exporter/copyright: licenses/COPYRIGHT-pgbackrest-exporter
   snap-license:
     plugin: dump
