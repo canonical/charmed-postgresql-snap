@@ -26,3 +26,6 @@ echo "pg1-user=snap_daemon" >> $SNAP_DATA/etc/pgbackrest/pgbackrest.conf
 
 chown -R 584788:root $SNAP_COMMON/*
 chown -R 584788:root $SNAP_DATA/*
+
+mkdir -p $SNAP_COMMON/raft
+chown -R 584788:root $SNAP_COMMON/raft
