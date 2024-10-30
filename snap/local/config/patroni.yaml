@@ -36,10 +36,10 @@ postgresql:
   listen: "*:5432"
   connect_address: 127.0.0.1:5432
   data_dir: /var/snap/charmed-postgresql/common/postgresql
-  bin_dir: /snap/charmed-postgresql/current/usr/lib/postgresql/14/bin
-  config_dir: /var/snap/charmed-postgresql/current/postgresql
+  bin_dir: /snap/charmed-postgresql/current/usr/lib/postgresql/16/bin
+  config_dir: /var/snap/charmed-postgresql/common/postgresql
   pgpass: "/var/snap/charmed-postgresql/current/postgresql/\
-      data/14-postgresql.pgpass"
+      data/16-postgresql.pgpass"
   authentication:
     replication:
       username: "replicator"

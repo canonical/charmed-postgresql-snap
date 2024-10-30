@@ -29,3 +29,8 @@ chown -R 584788:root $SNAP_DATA/*
 
 mkdir -p $SNAP_COMMON/raft
 chown -R 584788:root $SNAP_COMMON/raft
+mkdir -p $SNAP_COMMON/postgresql
+chown -R 584788:root $SNAP_COMMON/postgresql
+
+mkdir -p /var/snap/charmed-postgresql/current/postgresql/data
+chown -R 584788:root /var/snap/charmed-postgresql/current/postgresql/data
