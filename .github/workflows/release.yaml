@@ -9,7 +9,7 @@ concurrency:
 on:
   push:
     branches:
-      - 14/edge
+      - 16/edge
     paths:
       - snap
 
@@ -24,7 +24,7 @@ jobs:
       - build
     uses: canonical/data-platform-workflows/.github/workflows/release_snap.yaml@v23.0.5
     with:
-      channel: 14/edge
+      channel: 16/edge
       artifact-prefix: ${{ needs.build.outputs.artifact-prefix }}
     secrets:
       snap-store-token: ${{ secrets.SNAP_STORE_TOKEN }}
