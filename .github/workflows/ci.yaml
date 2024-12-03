@@ -20,7 +20,7 @@ jobs:
 
   smoke:
     name: Smoke test snap
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     timeout-minutes: 5
     needs:
       - lint
