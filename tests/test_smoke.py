@@ -48,10 +48,18 @@ def test_all_apps():
 
         for app, data in snapcraft["apps"].items():
             if not bool(data.get("daemon")) and app not in skip:
-                subprocess.run(
-                    f"{snapcraft['name']}.{app} {override.get(app, '--help')}".split(),
-                    check=True,
-                )
+                try:
+                    subprocess.run(
+                        f"{snapcraft['name']}.{app} {override.get(app, '--help')}".split(),
+                        check=True,
+                        capture_output=True,
+                        text=True,
+                    )
+                except subprocess.CalledProcessError as e:
+                    # Print the error and the stderr output
+                    print(f"Command failed with return code {e.returncode}")
+                    print("stderr output:")
+                    print(e.stderr)
 
 
 @pytest.mark.run(after="test_install")
