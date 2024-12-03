@@ -57,7 +57,7 @@ def test_all_apps():
                     )
                 except subprocess.CalledProcessError as e:
                     # Print the error and the stderr output
-                    print(f"Command failed with return code {e.returncode}")
+                    print(f"Command {snapcraft['name']}.{app} failed with return code {e.returncode}")
                     print("stderr output:")
                     print(e.stderr)
 
