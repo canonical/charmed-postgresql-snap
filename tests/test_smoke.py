@@ -9,6 +9,10 @@ def test_install():
         snapcraft = yaml.safe_load(file)
 
         subprocess.run(
+            f"sudo snap install core24".split(),
+            check=True,
+        )
+        subprocess.run(
             f"sudo snap install ./{snapcraft['name']}_{snapcraft['version']}_amd64.snap --devmode".split(),
             check=True,
         )
@@ -48,18 +52,12 @@ def test_all_apps():
 
         for app, data in snapcraft["apps"].items():
             if not bool(data.get("daemon")) and app not in skip:
-                try:
-                    subprocess.run(
-                        f"{snapcraft['name']}.{app} {override.get(app, '--help')}".split(),
-                        check=True,
-                        capture_output=True,
-                        text=True,
-                    )
-                except subprocess.CalledProcessError as e:
-                    # Print the error and the stderr output
-                    print(f"Command {snapcraft['name']}.{app} {override.get(app, '--help')} failed with return code {e.returncode}")
-                    print("stderr output:")
-                    print(e.stderr)
+                subprocess.run(
+                    f"{snapcraft['name']}.{app} {override.get(app, '--help')}".split(),
+                    check=True,
+                    capture_output=True,
+                    text=True,
+                )
 
 
 @pytest.mark.run(after="test_install")
