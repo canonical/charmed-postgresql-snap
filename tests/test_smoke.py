@@ -9,10 +9,6 @@ def test_install():
         snapcraft = yaml.safe_load(file)
 
         subprocess.run(
-            f"sudo snap install core24".split(),
-            check=True,
-        )
-        subprocess.run(
             f"sudo snap install ./{snapcraft['name']}_{snapcraft['version']}_amd64.snap --devmode".split(),
             check=True,
         )
@@ -55,8 +51,6 @@ def test_all_apps():
                 subprocess.run(
                     f"{snapcraft['name']}.{app} {override.get(app, '--help')}".split(),
                     check=True,
-                    capture_output=True,
-                    text=True,
                 )
 
 
