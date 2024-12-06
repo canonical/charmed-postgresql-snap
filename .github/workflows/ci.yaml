@@ -16,7 +16,19 @@ jobs:
 
   build:
     name: Build snap
-    uses: canonical/data-platform-workflows/.github/workflows/build_snap.yaml@lucas/fix-collect-bases
+    uses: canonical/data-platform-workflows/.github/workflows/build_snap.yaml@beta-charmcraftst124
+
+  release:
+    name: Release snap
+    needs:
+      - build
+    uses: canonical/data-platform-workflows/.github/workflows/release_snap.yaml@beta-charmcraftst124
+    with:
+      channel: 16/edge/test-core24-dpw
+      artifact-prefix: ${{ needs.build.outputs.artifact-prefix }}
+      create-github-release: false
+    secrets:
+      snap-store-token: ${{ secrets.SNAP_STORE_TOKEN }}
 
   smoke:
     name: Smoke test snap
