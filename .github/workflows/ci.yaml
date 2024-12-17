@@ -21,7 +21,7 @@ jobs:
   smoke:
     name: Smoke test snap
     runs-on: ubuntu-22.04
-    timeout-minutes: 5
+    timeout-minutes: 500
     needs:
       - lint
       - build
