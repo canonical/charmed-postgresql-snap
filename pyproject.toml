@@ -22,5 +22,5 @@ yamllint = "^1.35.1"
 optional = true
 
 [tool.poetry.group.unit.dependencies]
-pytest = "^8.3.3"
+pytest = "^8.3.4"
 pyyaml = "^6.0.2"
