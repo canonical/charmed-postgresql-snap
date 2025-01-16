@@ -26,6 +26,9 @@ jobs:
       - lint
       - build
     steps:
+      - name: Uninstall Postgresql
+        run: |
+          sudo apt --purge remove postgresql*
       - name: Checkout
         uses: actions/checkout@v4
       - name: Install tox & poetry
