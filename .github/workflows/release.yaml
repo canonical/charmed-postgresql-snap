@@ -11,7 +11,8 @@ on:
     branches:
       - 14/edge
     paths:
-      - snap
+      - snap/**
+  workflow_dispatch:
 
 jobs:
   build:
