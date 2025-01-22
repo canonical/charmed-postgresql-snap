@@ -1,12 +1,11 @@
 # yamllint disable rule:line-length
-name: charmed-postgresql # you probably want to 'snapcraft register <name>'
+name: postgresql # you probably want to 'snapcraft register <name>'
 base: core22 # the base snap is the execution environment for this snap
 version: '14.13' # just for humans, typically '1.2+git' or '1.3.2'
 summary: PostgreSQL in a snap.
 description: |
   PostgreSQL is a free and open-source relational database management
-  system emphasizing extensibility and SQL compliance.  This package
-  includes patroni for managing your PostgreSQL systems.
+  system emphasizing extensibility and SQL compliance.
 
 architectures:
   - build-on: [amd64]
@@ -25,21 +24,7 @@ plugs:
 
 package-repositories:
   - type: apt
-    ppa: data-platform/patroni
-  - type: apt
-    ppa: data-platform/pgbackrest
-  - type: apt
-    ppa: data-platform/pgbouncer
-  - type: apt
-    ppa: data-platform/postgres-exporter
-  - type: apt
-    ppa: data-platform/pgbouncer-exporter
-  - type: apt
-    ppa: data-platform/pgvector
-  - type: apt
     ppa: data-platform/python-pysyncobj
-  - type: apt
-    ppa: data-platform/pgbackrest-exporter
   - type: apt
     ppa: data-platform/postgresql-14-timescaledb
 
@@ -90,39 +75,13 @@ slots:
     interface: content
     source:
       read:
-        - $SNAP_COMMON/var/log/patroni
         - $SNAP_COMMON/var/log/postgresql
-        - $SNAP_COMMON/var/log/pgbackrest
-        - $SNAP_COMMON/var/log/pgbouncer
 
 apps:
   createdb:
     command: usr/bin/createdb
   createuser:
     command: usr/bin/createuser
-  patroni:
-    command: start-patroni.sh
-    daemon: simple
-    install-mode: disable
-    restart-condition: always
-    environment:
-      TCL_LIBRARY: $SNAP/usr/share/tcltk/tcl8.6
-      "LD_LIBRARY_PATH": "$LD_LIBRARY_PATH:$SNAP/usr/lib/\
-      $CRAFT_ARCH_TRIPLET_BUILD_FOR/blas:$SNAP/usr/lib/\
-      $CRAFT_ARCH_TRIPLET_BUILD_FOR/lapack"
-    plugs:
-      - network
-      - network-bind
-  patroni-raft-controller:
-    command: usr/bin/patroni_raft_controller
-  patronictl:
-    command: usr/bin/patronictl
-    plugs:
-      - network
-  patroni-aws:
-    command: usr/bin/patroni_aws
-  patroni-wale-restore:
-    command: usr/bin/patroni_wale_restore
   pg-archivecleanup:
     command: usr/bin/pg_archivecleanup
   pg-buildext:
@@ -175,49 +134,18 @@ apps:
     command: usr/bin/pg_renamecluster
   pg-updatedicts:
     command: usr/sbin/pg_updatedicts
-  pgbackrest:
-    command: usr/bin/pgbackrest
-    plugs:
-      - network
-  pgbackrest-service:
-    command: start-pgbackrest.sh
-    daemon: simple
-    install-mode: disable
-    plugs:
-      - network
-      - network-bind
-  pgbackrest-exporter:
-    command: start-pgbackrest-exporter.sh
-    daemon: simple
-    install-mode: disable
-    plugs:
-      - network
-      - network-bind
   pgbench:
     command: usr/bin/pgbench
-  pgbouncer:
-    command: usr/sbin/pgbouncer
-  pgbouncer-server:
-    command: start-pgbouncer.sh
-    plugs:
-      - network
-      - network-bind
-  prometheus-postgres-exporter:
-    command: start-exporter.sh
-    daemon: simple
-    install-mode: disable
-    plugs:
-      - network
-      - network-bind
-  prometheus-pgbouncer-exporter:
-    command: start-pgb-exporter.sh
-    plugs:
-      - network
-      - network-bind
   psql:
     command: usr/bin/psql
     plugs:
       - network
+  postgresql:
+    command: start-postgresql.sh
+    daemon: simple
+    plugs:
+      - network
+      - network-bind
   syncobj-admin:
     command: usr/bin/syncobj_admin
     plugs:
@@ -229,18 +157,12 @@ parts:
     stage-packages:
       - postgresql=14+238
       - util-linux
-      - pgbouncer=1.21.0-0ubuntu0.22.04.1~ppa1
-      - pgbackrest=2.53-1ubuntu0.22.04.1~ppa1
-      - prometheus-postgres-exporter=0.12.1-0ubuntu0.22.04.1~ppa1
-      - golang-github-prometheus-community-pgbouncer-exporter=0.7.0-0ubuntu0.22.04.1~ppa1
       - python3-pysyncobj=0.3.12-0ubuntu0.22.04.1~ppa1
       - python3-boto3
-      - patroni=3.1.2-0ubuntu0.22.04.1~ppa2
-      - golang-github-woblerr-pgbackrest-exporter=0.16.2+ds1-0ubuntu0.22.04.1~ppa1
       - locales-all
       # Landscape deps
       - postgresql-14-debversion=1.1.1-5
-      - postgresql-plpython3-14=14.13-0ubuntu0.22.04.1
+      # - postgresql-plpython3-14=14.13-0ubuntu0.22.04.1
       - postgresql-contrib=14+238
       - postgresql-plperl-14
       - postgresql-14-similarity
@@ -255,22 +177,17 @@ parts:
       - postgresql-14-icu-ext
       - postgresql-14-postgis-3
       - postgresql-14-postgis-3-scripts
-      - postgresql-14-pgvector
+      #- postgresql-14-pgvector
       - postgresql-14-pgaudit
       - timescaledb
     organize:
       usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
       usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
-      usr/share/doc/pgbouncer/copyright: licenses/COPYRIGHT-pgbouncer
-      usr/share/doc/pgbackrest/copyright: licenses/COPYRIGHT-pgbackrest
-      usr/share/doc/prometheus-postgres-exporter/copyright: licenses/COPYRIGHT-prometheus-postgres-exporter
-      usr/share/doc/golang-github-prometheus-community-pgbouncer-exporter/copyright: licenses/COPYRIGHT-golang-github-prometheus-community-pgbouncer-exporter
       usr/share/doc/python3-pysyncobj/copyright: licenses/COPYRIGHT-python3-pysyncobj
       usr/share/doc/python3-boto3/copyright: licenses/COPYRIGHT-python3-boto3
-      usr/share/doc/patroni/copyright: licenses/COPYRIGHT-patroni
       usr/share/doc/locales-all/copyright: licenses/COPYRIGHT-locales-all
       usr/share/doc/postgresql-14-debversion/copyright: licenses/COPYRIGHT-postgresql-14-debversion
-      usr/share/doc/postgresql-plpython3-14/copyright: licenses/COPYRIGHT-postgresql-plpython3-14
+      # usr/share/doc/postgresql-plpython3-14/copyright: licenses/COPYRIGHT-postgresql-plpython3-14
       usr/share/doc/postgresql-contrib/copyright: licenses/COPYRIGHT-postgresql-contrib
       usr/share/doc/postgresql-plperl-14/copyright: licenses/COPYRIGHT-plperl
       usr/share/doc/postgresql-similarity-14/copyright: licenses/COPYRIGHT-similarity
@@ -284,10 +201,9 @@ parts:
       usr/share/doc/postgresql-14-tds-fdw/copyright: licenses/COPYRIGHT-tds-fdw
       usr/share/doc/postgresql-14-icu-ext/copyright: licenses/COPYRIGHT-icu-ext
       usr/share/doc/postgresql-14-postgis-3/copyright: licenses/COPYRIGHT-postgis
-      usr/share/doc/postgresql-14-pgvector/copyright: licenses/COPYRIGHT-pgvector
+      # usr/share/doc/postgresql-14-pgvector/copyright: licenses/COPYRIGHT-pgvector
       usr/share/doc/postgresql-14-pgaudit/copyright: licenses/COPYRIGHT-pgaudit
       usr/share/doc/timescaledb-postgresql-14/copyright: licenses/COPYRIGHT-timescaledb
-      usr/share/doc/golang-github-woblerr-pgbackrest-exporter/copyright: licenses/COPYRIGHT-pgbackrest-exporter
   snap-license:
     plugin: dump
     source: .
