@@ -16,11 +16,4 @@ chown -R 584788:root $SNAP_DATA/*
 export LOCPATH="${SNAP}"/usr/lib/locale
 export PGDATA=$SNAP_DATA/pgsql/data
 
-## necessary for snap_daemon to be used when connecting with psql
-# mkdir /home/snap_daemon
-# chown -R 584788:root /home/snap_daemon
-# usermod -d /home/snap_daemon snap_daemon
-
-echo "Initializing PostgreSQL data directory..."
-"${SNAP}/usr/bin/setpriv" --clear-groups --reuid snap_daemon --regid snap_daemon -- "${SNAP}/usr/lib/postgresql/14/bin/pg_ctl" initdb -D "${PGDATA}"
-
+"${SNAP}/usr/bin/setpriv" --clear-groups --reuid snap_daemon --regid snap_daemon -- "${SNAP}/usr/lib/postgresql/14/bin/initdb" -U postgres -D "${PGDATA}"
