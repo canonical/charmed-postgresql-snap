@@ -24,10 +24,6 @@ def test_all_apps():
         }
 
         skip = [
-            "patroni-aws",
-            "patronictl",
-            "patroni-wale-restore",
-            "patroni-raft-controller",
             "pg-buildext",
             "pg-conftool",
             "pg-createcluster",
@@ -41,9 +37,6 @@ def test_all_apps():
             "pg-renamecluster",
             "pg-updatedicts",
             "pg-lsclusters",
-            "syncobj-admin",
-            "pgbouncer-server",
-            "prometheus-pgbouncer-exporter",
         ]
 
         for app, data in snapcraft["apps"].items():
