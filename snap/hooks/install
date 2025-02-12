@@ -14,6 +14,6 @@ chown -R 584788:root $SNAP_COMMON/*
 chown -R 584788:root $SNAP_DATA/*
 
 export LOCPATH="${SNAP}"/usr/lib/locale
-export PGDATA=$SNAP_DATA/pgsql/data
+export PGDATA=$SNAP_COMMON/pgsql/data
 
 "${SNAP}/usr/bin/setpriv" --clear-groups --reuid snap_daemon --regid snap_daemon -- "${SNAP}/usr/lib/postgresql/14/bin/initdb" -U postgres -D "${PGDATA}"
