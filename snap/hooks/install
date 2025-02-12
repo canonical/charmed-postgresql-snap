@@ -1,9 +1,9 @@
 #!/bin/bash
 
 mkdir -p $SNAP_DATA/etc/postgresql
-mkdir -p $SNAP_DATA/pgsql/
-mkdir -p $SNAP_DATA/pgsql/data
 
+mkdir -p $SNAP_COMMON/pgsql/
+mkdir -p $SNAP_COMMON/pgsql/data
 mkdir -p $SNAP_COMMON/postgresql.failed
 mkdir -p $SNAP_COMMON/data/db
 
