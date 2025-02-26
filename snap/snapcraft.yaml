@@ -290,6 +290,15 @@ parts:
       usr/share/doc/postgresql-14-pgaudit/copyright: licenses/COPYRIGHT-pgaudit
       usr/share/doc/timescaledb-postgresql-14/copyright: licenses/COPYRIGHT-timescaledb
       usr/share/doc/golang-github-woblerr-pgbackrest-exporter/copyright: licenses/COPYRIGHT-pgbackrest-exporter
+  services-deps:
+    plugin: python
+    source: .
+    build-packages:
+      - libpq-dev
+      - libldap2-dev
+      - libsasl2-dev
+    python-packages:
+      - postgresql-ldap-sync==0.2.1
   snap-license:
     plugin: dump
     source: .
