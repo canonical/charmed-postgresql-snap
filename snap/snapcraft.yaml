@@ -238,6 +238,7 @@ parts:
       - patroni=3.1.2-0ubuntu0.22.04.1~ppa2
       - golang-github-woblerr-pgbackrest-exporter=0.16.2+ds1-0ubuntu0.22.04.1~ppa1
       - locales-all
+      - libldap-common
       # Landscape deps
       - postgresql-14-debversion=1.1.1-5
       - postgresql-plpython3-14=14.15-0ubuntu0.22.04.1
@@ -269,6 +270,7 @@ parts:
       usr/share/doc/python3-boto3/copyright: licenses/COPYRIGHT-python3-boto3
       usr/share/doc/patroni/copyright: licenses/COPYRIGHT-patroni
       usr/share/doc/locales-all/copyright: licenses/COPYRIGHT-locales-all
+      usr/share/doc/libldap-common/copyright: licenses/COPYRIGHT-libldap-common
       usr/share/doc/postgresql-14-debversion/copyright: licenses/COPYRIGHT-postgresql-14-debversion
       usr/share/doc/postgresql-plpython3-14/copyright: licenses/COPYRIGHT-postgresql-plpython3-14
       usr/share/doc/postgresql-contrib/copyright: licenses/COPYRIGHT-postgresql-contrib
@@ -288,6 +290,15 @@ parts:
       usr/share/doc/postgresql-14-pgaudit/copyright: licenses/COPYRIGHT-pgaudit
       usr/share/doc/timescaledb-postgresql-14/copyright: licenses/COPYRIGHT-timescaledb
       usr/share/doc/golang-github-woblerr-pgbackrest-exporter/copyright: licenses/COPYRIGHT-pgbackrest-exporter
+  services-deps:
+    plugin: python
+    source: .
+    build-packages:
+      - libpq-dev
+      - libldap2-dev
+      - libsasl2-dev
+    python-packages:
+      - postgresql-ldap-sync==0.2.1
   snap-license:
     plugin: dump
     source: .
