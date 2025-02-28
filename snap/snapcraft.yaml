@@ -13,8 +13,8 @@ architectures:
     build-for: [amd64]
   - build-on: [arm64]
     build-for: [arm64]
-grade: stable # must be 'stable' to release into candidate/stable channels
-confinement: strict # use 'strict' once you have the right plugs and slots
+grade: stable
+confinement: strict
 
 system-usernames:
   snap_daemon: shared
@@ -84,7 +84,6 @@ layout:
   $SNAP/usr/share/postgresql/14/extension/postgis_topology.control:
     symlink: $SNAP/usr/share/postgresql/14/extension/postgis_topology-3.control
 
-# TODO: Add postgresql log path once configured
 slots:
   logs:
     interface: content
@@ -133,8 +132,6 @@ apps:
     command: usr/bin/pg_dropcluster
   pg-isready:
     command: usr/bin/pg_isready
-  # pg-receivexlog:
-  #   command: usr/bin/pg_receivexlog
   pg-restore:
     command: usr/bin/pg_restore
     plugs:
