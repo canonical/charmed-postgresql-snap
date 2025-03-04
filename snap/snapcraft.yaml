@@ -72,7 +72,6 @@ layout:
   $SNAP/usr/share/postgresql/16/extension/postgis_topology.control:
     symlink: $SNAP/usr/share/postgresql/16/extension/postgis_topology-3.control
 
-# TODO: Add postgresql log path once configured
 slots:
   logs:
     interface: content
@@ -121,8 +120,6 @@ apps:
     command: usr/bin/pg_dropcluster
   pg-isready:
     command: usr/bin/pg_isready
-  # pg-receivexlog:
-  #   command: usr/bin/pg_receivexlog
   pg-restore:
     command: usr/bin/pg_restore
     plugs:
@@ -215,7 +212,7 @@ parts:
   postgres-debs:
     plugin: nil
     stage-packages:
-      - postgresql-16=16.6-0ubuntu0.24.04.1
+      - postgresql=16+257build1
       - util-linux
       - pgbouncer=1.22.0-1build4
       - pgbackrest=2.53-1ubuntu0.24.04.1~ppa1
@@ -226,6 +223,7 @@ parts:
       - patroni=3.2.2-2
       - prometheus-pgbackrest-exporter=0.17.0+ds1-0ubuntu0.24.04.1~ppa1
       - locales-all
+      - libldap-common
       # Landscape deps
       - timescaledb=2.14.2+dfsg-0ubuntu0.24.04.1~ppa1
       - postgresql-16-debversion
@@ -257,6 +255,7 @@ parts:
       usr/share/doc/python3-boto3/copyright: licenses/COPYRIGHT-python3-boto3
       usr/share/doc/patroni/copyright: licenses/COPYRIGHT-patroni
       usr/share/doc/locales-all/copyright: licenses/COPYRIGHT-locales-all
+      usr/share/doc/libldap-common/copyright: licenses/COPYRIGHT-libldap-common
       usr/share/doc/postgresql-16-debversion/copyright: licenses/COPYRIGHT-postgresql-16-debversion
       usr/share/doc/postgresql-plpython3-16/copyright: licenses/COPYRIGHT-postgresql-plpython3-16
       usr/share/doc/postgresql-contrib/copyright: licenses/COPYRIGHT-postgresql-contrib
@@ -276,6 +275,15 @@ parts:
       usr/share/doc/postgresql-16-pgaudit/copyright: licenses/COPYRIGHT-pgaudit
       usr/share/doc/timescaledb-postgresql-14/copyright: licenses/COPYRIGHT-timescaledb
       usr/share/doc/prometheus-pgbackrest-exporter/copyright: licenses/COPYRIGHT-pgbackrest-exporter
+  services-deps:
+    plugin: python
+    source: .
+    build-packages:
+      - libpq-dev
+      - libldap2-dev
+      - libsasl2-dev
+    python-packages:
+      - postgresql-ldap-sync==0.2.1
   snap-license:
     plugin: dump
     source: .
