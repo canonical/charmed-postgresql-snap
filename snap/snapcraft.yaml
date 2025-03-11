@@ -27,6 +27,8 @@ package-repositories:
   - type: apt
     ppa: data-platform/pgbackrest
   - type: apt
+    ppa: data-platform/pgbackrest-exporter
+  - type: apt
     ppa: data-platform/postgresql-ldap-sync
 
 layout:
