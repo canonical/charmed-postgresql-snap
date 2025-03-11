@@ -40,7 +40,6 @@ def test_all_apps():
             "pg-renamecluster",
             "pg-updatedicts",
             "pg-lsclusters",
-            "syncobj-admin",
             "pgbouncer-server",
             "prometheus-pgbouncer-exporter",
         ]
