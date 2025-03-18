@@ -228,7 +228,7 @@ parts:
       - locales-all
       - libldap-common
       # Landscape deps
-      - postgresql-16-timescaledb-tsl=2.18.1-0ubuntu0.24.04.1~ppa1
+      - postgresql-16-timescaledb-tsl=2.18.2-0ubuntu0.24.04.1~ppa1
       - postgresql-16-debversion
       - postgresql-plpython3-16
       - postgresql-contrib
