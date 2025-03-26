@@ -89,6 +89,13 @@ apps:
     command: usr/bin/createdb
   createuser:
     command: usr/bin/createuser
+  ldap-sync:
+    command: start-ldap-synchronizer.sh
+    daemon: simple
+    install-mode: disable
+    plugs:
+      - network
+      - network-bind
   patroni:
     command: start-patroni.sh
     daemon: simple
@@ -224,14 +231,14 @@ parts:
       - python3-boto3
       - patroni=3.2.2-2
       - prometheus-pgbackrest-exporter=0.17.0+ds1-0ubuntu0.24.04.1~ppa1
-      - python3-postgresql-ldap-sync=0.2.1-0ubuntu0.25.04.1~ppa3
+      - python3-postgresql-ldap-sync=0.3.1-0ubuntu1
       - locales-all
       - libldap-common
       # Landscape deps
       - postgresql-16-timescaledb-tsl=2.18.2-0ubuntu0.24.04.1~ppa1
-      - postgresql-16-debversion
-      - postgresql-plpython3-16
-      - postgresql-contrib
+      - postgresql-16-debversion=1.1.2-3build2
+      - postgresql-plpython3-16=16.8-0ubuntu0.24.04.1
+      - postgresql-contrib=16+257build1
       - postgresql-plperl-16
       - postgresql-16-similarity
       - postgresql-16-orafce
@@ -254,6 +261,7 @@ parts:
       usr/share/doc/pgbackrest/copyright: licenses/COPYRIGHT-pgbackrest
       usr/share/doc/prometheus-postgres-exporter/copyright: licenses/COPYRIGHT-prometheus-postgres-exporter
       usr/share/doc/golang-github-prometheus-community-pgbouncer-exporter/copyright: licenses/COPYRIGHT-golang-github-prometheus-community-pgbouncer-exporter
+      usr/share/doc/python3-postgresql-ldap-sync/copyright: licenses/COPYRIGHT-python3-postgresql-ldap-sync
       usr/share/doc/python3-pysyncobj/copyright: licenses/COPYRIGHT-python3-pysyncobj
       usr/share/doc/python3-boto3/copyright: licenses/COPYRIGHT-python3-boto3
       usr/share/doc/patroni/copyright: licenses/COPYRIGHT-patroni
@@ -278,7 +286,6 @@ parts:
       usr/share/doc/postgresql-16-pgaudit/copyright: licenses/COPYRIGHT-pgaudit
       usr/share/doc/postgresql-16-timescaledb-tsl/copyright: licenses/COPYRIGHT-timescaledb
       usr/share/doc/prometheus-pgbackrest-exporter/copyright: licenses/COPYRIGHT-pgbackrest-exporter
-      usr/share/doc/python3-postgresql-ldap-syn/copyright: licenses/COPYRIGHT-python3-postgresql-ldap-sync
   snap-license:
     plugin: dump
     source: .
