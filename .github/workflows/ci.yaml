@@ -8,6 +8,8 @@ concurrency:
 
 on:
   pull_request:
+    paths-ignore:
+      - '**.md'
 
 jobs:
   lint:
