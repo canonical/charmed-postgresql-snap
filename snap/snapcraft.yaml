@@ -254,6 +254,7 @@ parts:
       - postgresql-16-postgis-3-scripts
       - postgresql-16-pgvector
       - postgresql-16-pgaudit
+      - postgresql-16-set-user
     organize:
       usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
       usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
@@ -286,6 +287,7 @@ parts:
       usr/share/doc/postgresql-16-pgaudit/copyright: licenses/COPYRIGHT-pgaudit
       usr/share/doc/postgresql-16-timescaledb-tsl/copyright: licenses/COPYRIGHT-timescaledb
       usr/share/doc/prometheus-pgbackrest-exporter/copyright: licenses/COPYRIGHT-pgbackrest-exporter
+      usr/share/doc/postgresql-16-set-user/copyright: licenses/COPYRIGHT-set-user
   snap-license:
     plugin: dump
     source: .
