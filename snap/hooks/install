@@ -2,6 +2,7 @@
 
 VAR_LIB_PGBACKREST=$SNAP_COMMON/var/lib/pgbackrest
 
+mkdir -p $SNAP_DATA/etc/ldap
 mkdir -p $SNAP_DATA/etc/patroni
 mkdir -p $SNAP_DATA/etc/postgresql
 mkdir -p $SNAP_DATA/etc/pgbackrest
@@ -19,6 +20,7 @@ mkdir -p $SNAP_COMMON/var/log/postgresql
 
 cp $SNAP/config/patroni.yaml $SNAP_DATA/etc/patroni
 cp $SNAP/etc/pgbackrest.conf $SNAP_DATA/etc/pgbackrest
+cp $SNAP/etc/ldap/ldap.conf $SNAP_DATA/etc/ldap
 
 sed -i "s:/var/lib/pgbackrest:$VAR_LIB_PGBACKREST:g" $SNAP_DATA/etc/pgbackrest/pgbackrest.conf
 echo "pg1-path=$SNAP_COMMON/var/lib/postgresql" >> $SNAP_DATA/etc/pgbackrest/pgbackrest.conf
