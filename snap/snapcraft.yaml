@@ -84,6 +84,12 @@ slots:
         - $SNAP_COMMON/var/log/pgbackrest
         - $SNAP_COMMON/var/log/pgbouncer
 
+environment:
+  # This variable will tell the LDAP binary where to get its configuration.
+  # The default /etc/ldap/ldap.conf file is not readable for the snap user.
+  # (https://manpages.debian.org/jessie/libldap-2.4-2/ldap.conf.5.en.html)
+  LDAPCONF: $SNAP_DATA/etc/ldap/ldap.conf
+
 apps:
   createdb:
     command: usr/bin/createdb
