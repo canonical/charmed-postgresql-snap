@@ -10,7 +10,10 @@ mkdir -p $SNAP_DATA/etc/pgbouncer
 
 mkdir -p $VAR_LIB_PGBACKREST
 mkdir -p $SNAP_COMMON/postgresql.failed
-mkdir -p $SNAP_COMMON/data/db
+mkdir -p $SNAP_COMMON/archive
+mkdir -p $SNAP_COMMON/data
+mkdir -p $SNAP_COMMON/logs
+mkdir -p $SNAP_COMMON/temp
 
 mkdir -p $SNAP_COMMON/var/lib/postgresql
 mkdir -p $SNAP_COMMON/var/log/patroni
