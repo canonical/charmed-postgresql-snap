@@ -1,7 +1,7 @@
 # yamllint disable rule:line-length
 name: charmed-postgresql
 base: core24
-version: '16.8'
+version: '16.9'
 summary: PostgreSQL in a snap.
 description: |
   PostgreSQL is a free and open-source relational database management
