@@ -245,7 +245,7 @@ parts:
       # Landscape deps
       - postgresql-16-timescaledb-tsl=2.18.2-0ubuntu0.24.04.1~ppa1
       - postgresql-16-debversion=1.1.2-3build2
-      - postgresql-plpython3-16=16.8-0ubuntu0.24.04.1
+      - postgresql-plpython3-16=16.9-0ubuntu0.24.04.1
       - postgresql-contrib=16+257build1
       - postgresql-plperl-16
       - postgresql-16-similarity
