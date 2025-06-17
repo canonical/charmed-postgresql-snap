@@ -264,6 +264,7 @@ parts:
       - postgresql-16-pgaudit
       - postgresql-16-set-user
       - postgresql-16-login-hook
+      - postgresql-16-repack
     organize:
       usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
       usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
@@ -298,6 +299,7 @@ parts:
       usr/share/doc/prometheus-pgbackrest-exporter/copyright: licenses/COPYRIGHT-pgbackrest-exporter
       usr/share/doc/postgresql-16-set-user/copyright: licenses/COPYRIGHT-set-user
       usr/share/doc/postgresql-16-login-hook/copyright: licences/COPYRIGHT-login-hook
+      usr/share/doc/postgresql-16-repack/copyright: licences/COPYRIGHT-repack
   snap-license:
     plugin: dump
     source: .
