@@ -105,6 +105,8 @@ environment:
 apps:
   createdb:
     command: usr/bin/createdb
+    plugs:
+      - network
   createuser:
     command: usr/bin/createuser
   ldap-sync:
