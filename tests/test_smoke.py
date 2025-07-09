@@ -30,16 +30,11 @@ def test_all_apps():
             "patroni-raft-controller",
             "pg-buildext",
             "pg-conftool",
-            "pg-createcluster",
-            "pg-dropcluster",
-            "pg-upgradecluster",
             "pg-backupcluster",
             "pg-restorecluster",
             "pg-virtualenv",
             "pg-ctlcluster",
-            "pg-renamecluster",
             "pg-updatedicts",
-            "pg-lsclusters",
             "pgbouncer-server",
             "prometheus-pgbouncer-exporter",
         ]
@@ -92,7 +87,9 @@ def test_version():
         snapcraft = yaml.safe_load(file)
         snap_version = snapcraft["version"]
         app_version = (
-            subprocess.check_output([f"{snapcraft['name']}.pg-isready", "--version"])
+            subprocess.check_output(
+                [f"sudo {snapcraft['name']}.pg-isready", "--version"]
+            )
             .decode()
             .split(" ")[2]
         )

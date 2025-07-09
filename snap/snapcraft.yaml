@@ -151,6 +151,8 @@ apps:
     command: setpriv.sh $SNAP/usr/bin/pg_basebackup
   pg-conftool:
     command: setpriv.sh $SNAP/usr/bin/pg_conftool
+  pg-ctl:
+    command: setpriv.sh $SNAP/usr/lib/postgresql/16/bin/pg_ctl
   pg-dumpall:
     command: setpriv.sh $SNAP/usr/bin/pg_dumpall
     plugs:
