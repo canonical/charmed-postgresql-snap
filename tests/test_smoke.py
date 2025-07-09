@@ -49,7 +49,7 @@ def test_all_apps():
                 print(f"Running {snapcraft['name']}.{app}...")
                 try:
                     subprocess.check_output(
-                        f"{snapcraft['name']}.{app} {override.get(app, '--help')}".split()
+                        f"sudo {snapcraft['name']}.{app} {override.get(app, '--help')}".split()
                     )
                 except subprocess.CalledProcessError as e:
                     print(e)
