@@ -88,7 +88,7 @@ def test_version():
         snap_version = snapcraft["version"]
         app_version = (
             subprocess.check_output(
-                [f"sudo {snapcraft['name']}.pg-isready", "--version"]
+                ["sudo", f"{snapcraft['name']}.pg-isready", "--version"]
             )
             .decode()
             .split(" ")[2]
