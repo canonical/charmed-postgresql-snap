@@ -27,11 +27,11 @@ else
     DATA_SOURCE_NAME="user=${EXPORTER_USER} password=${EXPORTER_PASS} host=${SOCKET_PATH}"
     DATA_SOURCE_NAME+=" port=5432 database=postgres"
     # For security measures, daemons should not be run as sudo.
-    # Execute as the non-sudo user: snap_daemon.
+    # Execute as the non-sudo user: _daemon_.
     exec "${SNAP}"/usr/bin/setpriv \
         --clear-groups \
-        --reuid snap_daemon \
-        --regid snap_daemon -- \
+        --reuid _daemon_ \
+        --regid _daemon_ -- \
         env DATA_SOURCE_NAME="${DATA_SOURCE_NAME}" \
         "${EXPORTER_PATH}" $(echo "${EXPORTER_OPTS}")
 fi

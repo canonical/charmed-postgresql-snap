@@ -15,7 +15,7 @@ grade: stable
 confinement: strict
 
 system-usernames:
-  snap_daemon: shared
+  _daemon_: shared
 
 plugs:
   shared-memory:

@@ -27,7 +27,7 @@ cp "${SNAP}/etc/ldap/ldap.conf" "${SNAP_DATA}/etc/ldap"
 
 sed -i "s:/var/lib/pgbackrest:${VAR_LIB_PGBACKREST}:g" "${ETC_PGBACKREST_CONF}"
 echo "pg1-path=${VAR_LIB_POSTGRESQL}" >> "${ETC_PGBACKREST_CONF}"
-echo "pg1-user=snap_daemon" >> "${ETC_PGBACKREST_CONF}"
+echo "pg1-user=_daemon_" >> "${ETC_PGBACKREST_CONF}"
 
-chown -R 584788:root "${SNAP_COMMON}"/*
-chown -R 584788:root "${SNAP_DATA}"/*
+chown -R 584792:root "${SNAP_COMMON}"/*
+chown -R 584792:root "${SNAP_DATA}"/*

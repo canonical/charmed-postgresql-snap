@@ -12,11 +12,11 @@ if [ -z "${SNAP}" ]; then
 fi
 
 # For security measures, daemons should not be run as sudo.
-# Execute as the non-sudo user: snap_daemon.
+# Execute as the non-sudo user: _daemon_.
 exec "${SNAP}"/usr/bin/setpriv \
   --clear-groups \
-  --reuid snap_daemon \
-  --regid snap_daemon -- \
+  --reuid _daemon_ \
+  --regid _daemon_ -- \
   env LDAP_HOST="$(snapctl get ldap-sync.ldap_host)" \
   env LDAP_PORT="$(snapctl get ldap-sync.ldap_port)" \
   env LDAP_BASE_DN="$(snapctl get ldap-sync.ldap_base_dn)" \
