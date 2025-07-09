@@ -120,7 +120,7 @@ apps:
   patroni-raft-controller:
     command: usr/bin/patroni_raft_controller
   patronictl:
-    command: usr/bin/patronictl
+    command: setpriv.sh $SNAP/usr/bin/patronictl
     plugs:
       - network
   patroni-aws:
@@ -131,54 +131,36 @@ apps:
     command: usr/bin/pg_archivecleanup
   pg-buildext:
     command: usr/bin/pg_buildext
-  pg-createcluster:
-    command: usr/bin/pg_createcluster
-  pg-dropcluster:
-    command: usr/bin/pg_dropcluster
   pg-isready:
     command: usr/bin/pg_isready
   pg-restore:
     command: usr/bin/pg_restore
     plugs:
       - network
-  pg-upgradecluster:
-    command: usr/bin/pg_upgradecluster
-  pg-backupcluster:
-    command: usr/bin/pg_backupcluster
   pg-config:
     command: usr/bin/pg_config
   pg-dump:
     command: usr/bin/pg_dump
     plugs:
       - network
-  pg-lsclusters:
-    command: usr/bin/pg_lsclusters
   pg-recvlogical:
     command: usr/bin/pg_recvlogical
-  pg-restorecluster:
-    command: usr/bin/pg_restorecluster
   pg-virtualenv:
     command: usr/bin/pg_virtualenv
   pg-basebackup:
     command: usr/bin/pg_basebackup
   pg-conftool:
     command: usr/bin/pg_conftool
-  pg-ctl:
-    command: usr/lib/postgresql/16/bin/pg_ctl
-  pg-ctlcluster:
-    command: usr/bin/pg_ctlcluster
   pg-dumpall:
     command: usr/bin/pg_dumpall
     plugs:
       - network
   pg-receivewal:
     command: usr/bin/pg_receivewal
-  pg-renamecluster:
-    command: usr/bin/pg_renamecluster
   pg-updatedicts:
     command: usr/sbin/pg_updatedicts
   pgbackrest:
-    command: usr/bin/pgbackrest
+    command: setpriv.sh $SNAP/usr/bin/pgbackrest
     plugs:
       - network
   pgbackrest-service:
