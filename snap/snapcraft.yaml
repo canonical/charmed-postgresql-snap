@@ -201,7 +201,7 @@ apps:
       - network
       - network-bind
   psql:
-    command: setpriv.sh $SNAP/usr/bin/psql
+    command: usr/bin/psql
     plugs:
       - network
   syncobj-admin:
