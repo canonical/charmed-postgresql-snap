@@ -280,7 +280,6 @@ parts:
       usr/share/doc/golang-github-prometheus-community-pgbouncer-exporter/copyright: licenses/COPYRIGHT-golang-github-prometheus-community-pgbouncer-exporter
       usr/share/doc/python3-postgresql-ldap-sync/copyright: licenses/COPYRIGHT-python3-postgresql-ldap-sync
       usr/share/doc/python3-pysyncobj/copyright: licenses/COPYRIGHT-python3-pysyncobj
-      usr/share/doc/python3-boto3/copyright: licenses/COPYRIGHT-python3-boto3
       usr/share/doc/patroni/copyright: licenses/COPYRIGHT-patroni
       usr/share/doc/locales-all/copyright: licenses/COPYRIGHT-locales-all
       usr/share/doc/libldap-common/copyright: licenses/COPYRIGHT-libldap-common
