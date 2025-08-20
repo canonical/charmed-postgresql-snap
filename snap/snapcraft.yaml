@@ -23,6 +23,8 @@ plugs:
 
 package-repositories:
   - type: apt
+    ppa: lvoytek/dp-patroni
+  - type: apt
     ppa: data-platform/postgresql-16-timescaledb-tsl
   - type: apt
     ppa: data-platform/pgbackrest
