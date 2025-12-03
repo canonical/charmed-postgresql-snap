@@ -1,7 +1,7 @@
 # yamllint disable rule:line-length
 name: charmed-postgresql
 base: core24
-version: '16.10'
+version: '16.11'
 summary: PostgreSQL in a snap.
 description: |
   PostgreSQL is a free and open-source relational database management
@@ -230,7 +230,7 @@ parts:
       # Landscape deps
       - postgresql-16-timescaledb-tsl=2.18.2-0ubuntu0.24.04.2~ppa1
       - postgresql-16-debversion=1.1.2-3build2
-      - postgresql-plpython3-16=16.10-0ubuntu0.24.04.1
+      - postgresql-plpython3-16=16.11-0ubuntu0.24.04.1
       - postgresql-contrib=16+257build1.1
       - postgresql-plperl-16
       - postgresql-16-similarity
