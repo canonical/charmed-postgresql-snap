@@ -36,7 +36,7 @@ jobs:
           pipx install tox
           pipx install poetry
       - name: Download snap package(s)
-        uses: actions/download-artifact@v6
+        uses: actions/download-artifact@v7
         with:
           pattern: ${{ needs.build.outputs.artifact-prefix }}-*
           merge-multiple: true
