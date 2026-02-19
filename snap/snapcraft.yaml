@@ -228,6 +228,8 @@ apps:
       - network-bind
   psql:
     command: usr/bin/psql
+    environment:
+      PSQLRC: $SNAP/etc/postgresql-common/.psqlrc
     plugs:
       - network
   syncobj-admin:
