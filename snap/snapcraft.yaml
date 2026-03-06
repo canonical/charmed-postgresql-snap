@@ -219,7 +219,7 @@ parts:
       - util-linux
       - pgbouncer=1.22.0-1build4
       - pgbackrest=2.53-1ubuntu0.24.04.1~ppa1
-      - prometheus-postgres-exporter=0.15.0-1
+      - prometheus-postgres-exporter=0.15.0-1ubuntu0.3
       - golang-github-prometheus-community-pgbouncer-exporter=0.7.0-1
       - python3-pysyncobj=0.3.12-1
       - patroni=3.3.8-0ubuntu0.24.04.1~ppa1
