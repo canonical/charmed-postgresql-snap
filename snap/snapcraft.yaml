@@ -215,23 +215,23 @@ parts:
   postgres-debs:
     plugin: nil
     stage-packages:
-      - postgresql=16+257build1.1
+      - postgresql
       - util-linux
-      - pgbouncer=1.22.0-1build4
-      - pgbackrest=2.53-1ubuntu0.24.04.1~ppa1
-      - prometheus-postgres-exporter=0.15.0-1ubuntu0.3
-      - golang-github-prometheus-community-pgbouncer-exporter=0.7.0-1
-      - python3-pysyncobj=0.3.12-1
-      - patroni=3.3.8-0ubuntu0.24.04.1~ppa1
-      - prometheus-pgbackrest-exporter=0.17.0+ds1-0ubuntu0.24.04.1~ppa1
-      - python3-postgresql-ldap-sync=0.3.2-0ubuntu1
+      - pgbouncer
+      - pgbackrest
+      - prometheus-postgres-exporter
+      - golang-github-prometheus-community-pgbouncer-exporter
+      - python3-pysyncobj
+      - patroni
+      - prometheus-pgbackrest-exporter
+      - python3-postgresql-ldap-sync
       - locales-all
       - libldap-common
       # Landscape deps
-      - postgresql-16-timescaledb-tsl=2.18.2-0ubuntu0.24.04.2~ppa1
-      - postgresql-16-debversion=1.1.2-3build2
-      - postgresql-plpython3-16=16.13-0ubuntu0.24.04.1
-      - postgresql-contrib=16+257build1.1
+      - postgresql-16-timescaledb-tsl
+      - postgresql-16-debversion
+      - postgresql-plpython3-16
+      - postgresql-contrib
       - postgresql-plperl-16
       - postgresql-16-similarity
       - postgresql-16-orafce
