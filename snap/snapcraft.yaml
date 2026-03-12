@@ -101,6 +101,11 @@ environment:
   # The default /etc/ldap/ldap.conf file is not readable for the snap user.
   # (https://manpages.debian.org/jessie/libldap-2.4-2/ldap.conf.5.en.html)
   LDAPCONF: $SNAP_DATA/etc/ldap/ldap.conf
+  # Set the default PostgreSQL socket directory so that all libpq-based
+  # commands (psql, pg_dump, pg_dumpall, pg_restore, etc.) find the socket
+  # without requiring the user to pass -h /tmp manually.
+  # The socket is placed in /tmp by patroni (unix_socket_directories: /tmp).
+  PGHOST: /tmp
 
 apps:
   createdb:
@@ -131,6 +136,8 @@ apps:
     command: usr/bin/patroni_raft_controller
   patronictl:
     command: usr/bin/patronictl
+    environment:
+      PATRONICTL_CONFIG_FILE: $SNAP_DATA/etc/patroni/patroni.yaml
     plugs:
       - network
   patroni-aws:
@@ -189,6 +196,8 @@ apps:
     command: usr/sbin/pg_updatedicts
   pgbackrest:
     command: usr/bin/pgbackrest
+    environment:
+      PGBACKREST_CONFIG: $SNAP_DATA/etc/pgbackrest/pgbackrest.conf
     plugs:
       - network
   pgbackrest-service:
