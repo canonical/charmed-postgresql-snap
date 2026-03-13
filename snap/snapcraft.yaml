@@ -101,13 +101,9 @@ environment:
   # The default /etc/ldap/ldap.conf file is not readable for the snap user.
   # (https://manpages.debian.org/jessie/libldap-2.4-2/ldap.conf.5.en.html)
   LDAPCONF: $SNAP_DATA/etc/ldap/ldap.conf
-  # Set the default PostgreSQL socket directory so that all libpq-based
-  # commands (psql, pg_dump, pg_dumpall, pg_restore, etc.) find the socket
-  # without requiring the user to pass -h /tmp manually.
-  # /tmp is used because snap strict confinement does not allow writes to
-  # /var/run, and /run and /var/run cannot be used as layout targets.
-  # Patroni configures PostgreSQL to place the socket in /tmp
-  # (unix_socket_directories: /tmp in patroni.yaml).
+  # Default socket directory for libpq-based commands (psql, pg_dump, etc.).
+  # /tmp is used because strict confinement disallows /var/run as a layout
+  # target, and patroni places the socket there (unix_socket_directories).
   PGHOST: /tmp
 
 apps:
