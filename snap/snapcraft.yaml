@@ -103,7 +103,7 @@ environment:
   LDAPCONF: $SNAP_DATA/etc/ldap/ldap.conf
   # Default socket directory for libpq-based commands (psql, pg_dump, etc.).
   # /tmp is used because strict confinement disallows /var/run as a layout
-  # target (see unix_socket_directories in config/patroni.yaml).
+  # target (see unix_socket_directories in local/config/patroni.yaml).
   PGHOST: /tmp
 
 apps:
