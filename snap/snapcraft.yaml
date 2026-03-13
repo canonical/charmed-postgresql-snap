@@ -104,7 +104,10 @@ environment:
   # Set the default PostgreSQL socket directory so that all libpq-based
   # commands (psql, pg_dump, pg_dumpall, pg_restore, etc.) find the socket
   # without requiring the user to pass -h /tmp manually.
-  # The socket is placed in /tmp by patroni (unix_socket_directories: /tmp).
+  # /tmp is used because snap strict confinement does not allow writes to
+  # /var/run, and /run and /var/run cannot be used as layout targets.
+  # Patroni configures PostgreSQL to place the socket in /tmp
+  # (unix_socket_directories: /tmp in patroni.yaml).
   PGHOST: /tmp
 
 apps:
@@ -137,6 +140,7 @@ apps:
   patronictl:
     command: usr/bin/patronictl
     environment:
+      # Default config so patronictl works without -c/--config-file.
       PATRONICTL_CONFIG_FILE: $SNAP_DATA/etc/patroni/patroni.yaml
     plugs:
       - network
@@ -197,6 +201,7 @@ apps:
   pgbackrest:
     command: usr/bin/pgbackrest
     environment:
+      # Default config so pgbackrest works without --config.
       PGBACKREST_CONFIG: $SNAP_DATA/etc/pgbackrest/pgbackrest.conf
     plugs:
       - network
