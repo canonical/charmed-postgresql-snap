@@ -121,6 +121,9 @@ apps:
       - network-bind
   patroni-raft-controller:
     command: usr/bin/patroni_raft_controller
+    plugs:
+    - network
+    - network-bind
   patronictl:
     command: setpriv.sh $SNAP/usr/bin/patronictl
     plugs:
