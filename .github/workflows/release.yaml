@@ -20,7 +20,7 @@ jobs:
     name: Release snap
     needs:
       - ci-tests
-    uses: canonical/data-platform-workflows/.github/workflows/release_snap.yaml@v42.0.1
+    uses: canonical/data-platform-workflows/.github/workflows/release_snap.yaml@v42.1.0
     with:
       channel: ${{ github.ref_name }}
       artifact-prefix: ${{ needs.ci-tests.outputs.artifact-prefix }}
