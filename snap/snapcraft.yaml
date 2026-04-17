@@ -120,7 +120,7 @@ apps:
       - network
       - network-bind
   patroni-raft-controller:
-    command: usr/bin/patroni_raft_controller
+    command: setpriv.sh $SNAP/usr/bin/patroni_raft_controller
     plugs:
       - network
       - network-bind
