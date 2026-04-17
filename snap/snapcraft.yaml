@@ -7,6 +7,7 @@ description: |
   PostgreSQL is a free and open-source relational database management
   system emphasizing extensibility and SQL compliance.  This package
   includes patroni for managing your PostgreSQL systems.
+issues: https://github.com/canonical/charmed-postgresql-snap/issues
 
 platforms:
   amd64:
