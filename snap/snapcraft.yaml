@@ -7,12 +7,12 @@ description: |
   PostgreSQL is a free and open-source relational database management
   system emphasizing extensibility and SQL compliance.  This package
   includes patroni for managing your PostgreSQL systems.
-title: Charmed Postgresql snap
-contact: data-platform@lists.launchpad.net
+title: Charmed PostgreSQL
+contact: https://matrix.to/#/#charmhub-data-platform:ubuntu.com
 license: Apache-2.0
 issues: https://github.com/canonical/charmed-postgresql-snap/issues
 source-code: https://github.com/canonical/charmed-postgresql-snap
-website: https://github.com/canonical/charmed-postgresql-snap
+website: https://canonical.com/data/postgresql
 
 platforms:
   amd64:
