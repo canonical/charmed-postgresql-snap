@@ -93,6 +93,10 @@ environment:
   # The default /etc/ldap/ldap.conf file is not readable for the snap user.
   # (https://manpages.debian.org/jessie/libldap-2.4-2/ldap.conf.5.en.html)
   LDAPCONF: $SNAP_DATA/etc/ldap/ldap.conf
+  # Default socket directory for libpq-based commands (psql, pg_dump, etc.).
+  # /tmp is used because strict confinement disallows /var/run as a layout
+  # target (see unix_socket_directories in local/config/patroni.yaml).
+  PGHOST: /tmp
 
 apps:
   createdb:
@@ -123,6 +127,9 @@ apps:
     command: usr/bin/patroni_raft_controller
   patronictl:
     command: setpriv.sh $SNAP/usr/bin/patronictl
+    environment:
+      # Default config so patronictl works without -c/--config-file.
+      PATRONICTL_CONFIG_FILE: $SNAP_DATA/etc/patroni/patroni.yaml
     plugs:
       - network
   patroni-aws:
@@ -165,6 +172,9 @@ apps:
     command: setpriv.sh $SNAP/usr/sbin/pg_updatedicts
   pgbackrest:
     command: setpriv.sh $SNAP/usr/bin/pgbackrest
+    environment:
+      # Default config so pgbackrest works without --config.
+      PGBACKREST_CONFIG: $SNAP_DATA/etc/pgbackrest/pgbackrest.conf
     plugs:
       - network
   pgbackrest-service:
