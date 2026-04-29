@@ -6,6 +6,8 @@ if [ -z "${SNAP}" ]; then
     exec /usr/bin/pgbackrest_exporter \
         --backrest.config="/etc/pgbackrest.conf" "$@"
 else
+    # For security measures, daemons should not be run as sudo.
+    # Execute pgbackrest_exporter as the non-sudo user: _daemon_.
     exec "${SNAP}/usr/bin/setpriv" \
         --clear-groups \
         --reuid _daemon_ \
