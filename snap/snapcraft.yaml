@@ -173,6 +173,10 @@ apps:
     command: setpriv.sh $SNAP/usr/bin/pg_receivewal
   pg-updatedicts:
     command: setpriv.sh $SNAP/usr/sbin/pg_updatedicts
+  pg-waldump:
+    command: setpriv.sh $SNAP/usr/lib/postgresql/16/bin/pg_waldump
+    plugs:
+      - network
   pgbackrest:
     command: setpriv.sh $SNAP/usr/bin/pgbackrest
     environment:
