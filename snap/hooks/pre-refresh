@@ -1,0 +1,29 @@
+#!/bin/bash
+#
+# Pre-refresh hook for the charmed-postgresql snap.
+#
+# Reverse migration (versioned -> root) is handled by a one-shot
+# daemon (migrate-data) which runs as _daemon_ and can access
+# the snap's own data directories.
+#
+# The Patroni YAML at $SNAP_DATA/etc/patroni/patroni.yaml was
+# already rendered by the charm's update_config() before the snap
+# refresh started — the daemon reads it to detect direction.
+#
+# We wait for the daemon to complete before returning so that
+# migration is finished before snapd switches revisions and the
+# charm starts Patroni with the old (root-layout) config.
+set -euo pipefail
+
+SNAP_INSTANCE="${SNAP_INSTANCE_NAME:-charmed-postgresql}"
+SVC="$SNAP_INSTANCE.migrate-data"
+
+snapctl start "$SVC" 2>/dev/null || true
+
+# Wait up to 120 seconds for the migration daemon to finish.
+for _ in $(seq 1 120); do
+    if ! snapctl services "$SVC" 2>/dev/null | grep -q 'active'; then
+        exit 0
+    fi
+    sleep 1
+done

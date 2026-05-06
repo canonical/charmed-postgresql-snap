@@ -1,0 +1,25 @@
+#!/bin/bash
+#
+# Post-refresh hook for the charmed-postgresql snap.
+#
+# Forward migration (root -> versioned) is handled by the charm's
+# _ensure_storage_layout() which runs unconfined before the snap
+# refresh.  As a belt-and-suspenders backup, the one-shot daemon
+# (migrate-data) runs here as _daemon_ and can complete any
+# remaining work.
+#
+# We wait for the daemon to complete before returning.
+set -euo pipefail
+
+SNAP_INSTANCE="${SNAP_INSTANCE_NAME:-charmed-postgresql}"
+SVC="$SNAP_INSTANCE.migrate-data"
+
+snapctl start "$SVC" 2>/dev/null || true
+
+# Wait up to 120 seconds for the migration daemon to finish.
+for _ in $(seq 1 120); do
+    if ! snapctl services "$SVC" 2>/dev/null | grep -q 'active'; then
+        exit 0
+    fi
+    sleep 1
+done
