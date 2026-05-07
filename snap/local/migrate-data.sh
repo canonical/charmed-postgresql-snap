@@ -67,10 +67,14 @@ if grep -q '16/main' "$PATRONI_YAML" 2>/dev/null; then
         chmod 700 "$versioned_path"
     }
 
+    # Migrate persistent data directories only.  The temp tablespace is
+    # ephemeral and handled by the charm via SQL DROP/CREATE TABLESPACE.
+    # The temp storage root is owned by root (juju mount) so the daemon
+    # running as _daemon_ cannot rename files inside it.
     migrate_to_versioned "$LOGS_ROOT"    "$LOGS_VERSIONED"
     migrate_to_versioned "$DATA_ROOT"    "$DATA_VERSIONED"
     migrate_to_versioned "$ARCHIVE_ROOT" "$ARCHIVE_VERSIONED"
-    migrate_to_versioned "$TEMP_ROOT"    "$TEMP_VERSIONED"
+    mkdir -p "$TEMP_VERSIONED"
 
     # Repair pg_wal symlink
     PG_WAL_LINK="$DATA_VERSIONED/pg_wal"
@@ -92,11 +96,13 @@ else
     fi
 
     # ---- Reverse migration: versioned -> root ----
-    for dir in "$DATA_ROOT" "$ARCHIVE_ROOT" "$LOGS_ROOT" "$TEMP_ROOT"; do
+    for dir in "$DATA_ROOT" "$ARCHIVE_ROOT" "$LOGS_ROOT"; do
         [ -d "$dir" ] && chmod 755 "$dir"
     done
     # Ensure parent dirs of versioned paths are writable.
-    for p in "$DATA_VERSIONED" "$ARCHIVE_VERSIONED" "$LOGS_VERSIONED" "$TEMP_VERSIONED"; do
+    # Temp is excluded — subdirs inside it may be root-owned (created by
+    # the charm running as root).  An ephemeral mount chowned by the charm.
+    for p in "$DATA_VERSIONED" "$ARCHIVE_VERSIONED" "$LOGS_VERSIONED"; do
         [ -d "$p" ] && chmod 755 "$p"
         [ -d "$(dirname "$p")" ] && chmod 755 "$(dirname "$p")"
     done
@@ -138,7 +144,9 @@ else
     reverse_one "$DATA_VERSIONED"    "$DATA_ROOT"
     reverse_one "$ARCHIVE_VERSIONED" "$ARCHIVE_ROOT"
     reverse_one "$LOGS_VERSIONED"    "$LOGS_ROOT"
-    reverse_one "$TEMP_VERSIONED"    "$TEMP_ROOT"
+    # Temp tablespace is handled by the charm.  Clean up versioned dir if present.
+    rm -rf "$TEMP_VERSIONED" 2>/dev/null || true
+    rmdir "$(dirname "$TEMP_VERSIONED")" 2>/dev/null || true
 
     # PostgreSQL requires mode 700 on the data directory.
     # Do this before recreating pg_wal to avoid a window with wrong perms.
