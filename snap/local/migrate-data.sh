@@ -20,6 +20,25 @@ TEMP_ROOT="$SNAP_COMMON/data/temp"
 TEMP_VERSIONED="$TEMP_ROOT/16/main"
 
 PATRONI_YAML="$SNAP_DATA/etc/patroni/patroni.yaml"
+# Direct psql binary (bypasses broken Perl wrapper)
+PSQL_BIN="$SNAP/usr/lib/postgresql/16/bin/psql"
+LIBDIR=$(ls -d "$SNAP"/usr/lib/*-linux-gnu 2>/dev/null | head -1)
+export LD_LIBRARY_PATH="${LIBDIR}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+
+# Extract operator (superuser) password from patroni.yaml.
+# The charm renders this file via update_config() before snap refresh.
+# Guard: SNAP must be set by snapd
+if [ -z "${SNAP:-}" ]; then
+    echo "SNAP not set — cannot extract operator password" >&2
+else
+OPERATOR_PASSWORD=$(python3 -c "
+import yaml
+with open('$SNAP_DATA/etc/patroni/patroni.yaml') as f:
+    print(yaml.safe_load(f)['postgresql']['authentication']['superuser']['password'])
+" 2>/dev/null || true)
+export PGPASSWORD="$OPERATOR_PASSWORD"
+fi  # SNAP guard
+
 
 # ---- Determine direction from Patroni YAML ----
 if [ ! -f "$PATRONI_YAML" ]; then
@@ -89,6 +108,24 @@ if grep -q '16/main' "$PATRONI_YAML" 2>/dev/null; then
     fi
 else
     # Target expects root layout (rollback).
+    #
+    # ---- Reverse migration for temp tablespace catalog ----
+    # Run BEFORE the data-migration early-exit guard so that the
+    # catalog is always reconciled, even if persistent data was
+    # already moved back to root on a previous cycle.
+    CURRENT_LOCATION=$(PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -tAc \
+        "SELECT pg_tablespace_location(oid) FROM pg_tablespace WHERE spcname='temp';" 2>/dev/null || true)
+
+    if [ "$CURRENT_LOCATION" = "$TEMP_VERSIONED" ]; then
+        # Clear PG_* version directories — mirrors _clear_pg_version_dirs().
+        if [ -d "$TEMP_ROOT" ]; then
+            find "$TEMP_ROOT" -maxdepth 1 -name 'PG_*' -exec rm -rf {} +
+        fi
+        PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "DROP TABLESPACE temp;"
+        PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "CREATE TABLESPACE temp LOCATION '$TEMP_ROOT';"
+        PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "GRANT CREATE ON TABLESPACE temp TO public;"
+    fi
+
     if [ ! -f "$DATA_VERSIONED/PG_VERSION" ]; then
         # Data already at root — nothing to do.
         mkdir -p "$TEMP_VERSIONED"
