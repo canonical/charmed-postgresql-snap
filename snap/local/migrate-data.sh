@@ -22,23 +22,8 @@ TEMP_VERSIONED="$TEMP_ROOT/16/main"
 PATRONI_YAML="$SNAP_DATA/etc/patroni/patroni.yaml"
 # Direct psql binary (bypasses broken Perl wrapper)
 PSQL_BIN="$SNAP/usr/lib/postgresql/16/bin/psql"
-LIBDIR=$(ls -d "$SNAP"/usr/lib/*-linux-gnu 2>/dev/null | head -1)
+LIBDIR=$(ls -d "$SNAP"/usr/lib/*-linux-gnu | head -1)
 export LD_LIBRARY_PATH="${LIBDIR}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
-
-# Extract operator (superuser) password from patroni.yaml.
-# The charm renders this file via update_config() before snap refresh.
-# Guard: SNAP must be set by snapd
-if [ -z "${SNAP:-}" ]; then
-    echo "SNAP not set — cannot extract operator password" >&2
-else
-OPERATOR_PASSWORD=$(python3 -c "
-import yaml
-with open('$SNAP_DATA/etc/patroni/patroni.yaml') as f:
-    print(yaml.safe_load(f)['postgresql']['authentication']['superuser']['password'])
-" 2>/dev/null || true)
-export PGPASSWORD="$OPERATOR_PASSWORD"
-fi  # SNAP guard
-
 
 # ---- Determine direction from Patroni YAML ----
 if [ ! -f "$PATRONI_YAML" ]; then
@@ -47,7 +32,16 @@ if [ ! -f "$PATRONI_YAML" ]; then
     exit 0
 fi
 
-if grep -q '16/main' "$PATRONI_YAML" 2>/dev/null; then
+# Extract operator (superuser) password from patroni.yaml.
+# The charm renders this file via update_config() before snap refresh.
+OPERATOR_PASSWORD=$(python3 -c "
+import yaml
+with open('$PATRONI_YAML') as f:
+    print(yaml.safe_load(f)['postgresql']['authentication']['superuser']['password'])
+")
+export PGPASSWORD="$OPERATOR_PASSWORD"
+
+if grep -q '16/main' "$PATRONI_YAML"; then
     # Target expects versioned layout (forward upgrade).
     if [ -f "$DATA_VERSIONED/PG_VERSION" ]; then
         # Already migrated — just recreate temp dir.
@@ -98,9 +92,9 @@ if grep -q '16/main' "$PATRONI_YAML" 2>/dev/null; then
     # Repair pg_wal symlink
     PG_WAL_LINK="$DATA_VERSIONED/pg_wal"
     if [ -L "$PG_WAL_LINK" ]; then
-        CURRENT_TARGET=$(readlink -f "$PG_WAL_LINK" 2>/dev/null || true)
+        CURRENT_TARGET=$(readlink -f "$PG_WAL_LINK")
         if [ "$CURRENT_TARGET" != "$LOGS_VERSIONED" ]; then
-            rm -f "$PG_WAL_LINK"
+            unlink "$PG_WAL_LINK"
             ln -s "$LOGS_VERSIONED" "$PG_WAL_LINK"
         fi
     elif [ ! -e "$PG_WAL_LINK" ]; then
@@ -114,13 +108,9 @@ else
     # catalog is always reconciled, even if persistent data was
     # already moved back to root on a previous cycle.
     CURRENT_LOCATION=$(PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -tAc \
-        "SELECT pg_tablespace_location(oid) FROM pg_tablespace WHERE spcname='temp';" 2>/dev/null || true)
+        "SELECT pg_tablespace_location(oid) FROM pg_tablespace WHERE spcname='temp';")
 
     if [ "$CURRENT_LOCATION" = "$TEMP_VERSIONED" ]; then
-        # Clear PG_* version directories — mirrors _clear_pg_version_dirs().
-        if [ -d "$TEMP_ROOT" ]; then
-            find "$TEMP_ROOT" -maxdepth 1 -name 'PG_*' -exec rm -rf {} +
-        fi
         PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "DROP TABLESPACE temp;"
         PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "CREATE TABLESPACE temp LOCATION '$TEMP_ROOT';"
         PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "GRANT CREATE ON TABLESPACE temp TO public;"
@@ -145,7 +135,7 @@ else
     done
 
     if [ -L "$DATA_VERSIONED/pg_wal" ]; then
-        rm -f "$DATA_VERSIONED/pg_wal"
+        unlink "$DATA_VERSIONED/pg_wal"
     fi
 
     # Reverse migration: move versioned contents back to storage roots.
@@ -153,37 +143,20 @@ else
         local versioned="$1"
         local root="$2"
         [ -d "$versioned" ] || return
-        # Move contents of versioned path into root, merging directories.
         for item in "$versioned"/*; do
             [ -e "$item" ] || continue
-            local name
-            name=$(basename "$item")
-            local dest="$root/$name"
-            if [ -d "$item" ] && [ -d "$dest" ]; then
-                # Both are dirs — move source contents into existing dest.
-                for sub in "$item"/*; do
-                    [ -e "$sub" ] || continue
-                    local subname
-                    subname=$(basename "$sub")
-                    local subdest="$dest/$subname"
-                    [ -e "$subdest" ] && continue
-                    mv "$sub" "$subdest"
-                done
-                rmdir "$item" 2>/dev/null || true
-            elif [ ! -e "$dest" ]; then
-                mv "$item" "$dest"
-            fi
-            # If dest exists and is not a dir with a matching src dir, skip.
+            mv "$item" "$root/"
         done
-        rmdir "$versioned" 2>/dev/null || true
+        rmdir "$versioned"
+        rmdir "$(dirname "$versioned")"
     }
 
     reverse_one "$DATA_VERSIONED"    "$DATA_ROOT"
     reverse_one "$ARCHIVE_VERSIONED" "$ARCHIVE_ROOT"
     reverse_one "$LOGS_VERSIONED"    "$LOGS_ROOT"
     # Temp tablespace is handled by the charm.  Clean up versioned dir if present.
-    rm -rf "$TEMP_VERSIONED" 2>/dev/null || true
-    rmdir "$(dirname "$TEMP_VERSIONED")" 2>/dev/null || true
+    rmdir "$TEMP_VERSIONED"
+    rmdir "$(dirname "$TEMP_VERSIONED")"
 
     # PostgreSQL requires mode 700 on the data directory.
     # Do this before recreating pg_wal to avoid a window with wrong perms.
