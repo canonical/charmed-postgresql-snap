@@ -107,10 +107,6 @@ environment:
 apps:
   createdb:
     command: setpriv.sh $SNAP/usr/bin/createdb
-  migrate-data:
-    command: setpriv.sh $SNAP/migrate-data.sh
-    daemon: simple
-    install-mode: disable
   createuser:
     command: setpriv.sh $SNAP/usr/bin/createuser
   ldap-sync:

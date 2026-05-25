@@ -1,5 +1,5 @@
 #!/bin/bash
+# snapd enforces a 10-minute timeout on hooks.
 set -euo pipefail
 
-SNAP_INSTANCE="${SNAP_INSTANCE_NAME:-charmed-postgresql}"
-systemctl start "snap.$SNAP_INSTANCE.migrate-data.service"
+"$SNAP/setpriv.sh" "$SNAP/migrate-data.sh"

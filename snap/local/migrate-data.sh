@@ -22,8 +22,21 @@ TEMP_VERSIONED="$TEMP_ROOT/16/main"
 PATRONI_YAML="$SNAP_DATA/etc/patroni/patroni.yaml"
 # Direct psql binary (bypasses broken Perl wrapper)
 PSQL_BIN="$SNAP/usr/lib/postgresql/16/bin/psql"
-LIBDIR=$(ls -d "$SNAP"/usr/lib/*-linux-gnu | head -1)
+LIBDIR=$(ls -d "$SNAP"/usr/lib/*-linux-gnu 2>/dev/null | head -1)
 export LD_LIBRARY_PATH="${LIBDIR}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
+
+# Extract operator (superuser) password from patroni.yaml.
+# The charm renders this file via update_config() before snap refresh.
+if [ -z "${SNAP:-}" ]; then
+    echo "SNAP not set — cannot extract operator password" >&2
+else
+OPERATOR_PASSWORD=$(python3 -c "
+import yaml
+with open('$SNAP_DATA/etc/patroni/patroni.yaml') as f:
+    print(yaml.safe_load(f)['postgresql']['authentication']['superuser']['password'])
+" 2>/dev/null || true)
+export PGPASSWORD="$OPERATOR_PASSWORD"
+fi
 
 # ---- Determine direction from Patroni YAML ----
 if [ ! -f "$PATRONI_YAML" ]; then
@@ -31,15 +44,6 @@ if [ ! -f "$PATRONI_YAML" ]; then
     mkdir -p "$TEMP_VERSIONED"
     exit 0
 fi
-
-# Extract operator (superuser) password from patroni.yaml.
-# The charm renders this file via update_config() before snap refresh.
-OPERATOR_PASSWORD=$(python3 -c "
-import yaml
-with open('$PATRONI_YAML') as f:
-    print(yaml.safe_load(f)['postgresql']['authentication']['superuser']['password'])
-")
-export PGPASSWORD="$OPERATOR_PASSWORD"
 
 if grep -q '16/main' "$PATRONI_YAML"; then
     # Target expects versioned layout (forward upgrade).
@@ -104,16 +108,27 @@ else
     # Target expects root layout (rollback).
     #
     # ---- Reverse migration for temp tablespace catalog ----
-    # Run BEFORE the data-migration early-exit guard so that the
-    # catalog is always reconciled, even if persistent data was
-    # already moved back to root on a previous cycle.
+    # Must run BEFORE file migration so PostgreSQL can replay WAL
+    # without referencing stale versioned temp directories.
     CURRENT_LOCATION=$(PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -tAc \
-        "SELECT pg_tablespace_location(oid) FROM pg_tablespace WHERE spcname='temp';")
+        "SELECT pg_tablespace_location(oid) FROM pg_tablespace WHERE spcname='temp';" 2>/dev/null || true)
 
     if [ "$CURRENT_LOCATION" = "$TEMP_VERSIONED" ]; then
-        PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "DROP TABLESPACE temp;"
-        PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "CREATE TABLESPACE temp LOCATION '$TEMP_ROOT';"
-        PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "GRANT CREATE ON TABLESPACE temp TO public;"
+        # Only the primary can execute DDL.  Replicas skip this block;
+        # the primary's pre-refresh hook handles the catalog migration.
+        IS_RECOVERY=$(PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -tAc \
+            "SELECT pg_is_in_recovery();" 2>/dev/null || true)
+        if [ "$IS_RECOVERY" != "t" ]; then
+            if [ -d "$TEMP_ROOT" ]; then
+                find "$TEMP_ROOT" -maxdepth 1 -name 'PG_*' -exec rm -rf {} +
+            fi
+            PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "DROP TABLESPACE temp;"
+            PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "CREATE TABLESPACE temp LOCATION '$TEMP_ROOT';"
+            PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "GRANT CREATE ON TABLESPACE temp TO public;"
+            # Flush WAL so recovery after rollback won't replay stale
+            # Tablespace/CREATE records pointing to the versioned path.
+            PGPASSWORD="$OPERATOR_PASSWORD" "$PSQL_BIN" -h /tmp -U operator -d postgres -c "CHECKPOINT;"
+        fi
     fi
 
     if [ ! -f "$DATA_VERSIONED/PG_VERSION" ]; then
@@ -154,9 +169,10 @@ else
     reverse_one "$DATA_VERSIONED"    "$DATA_ROOT"
     reverse_one "$ARCHIVE_VERSIONED" "$ARCHIVE_ROOT"
     reverse_one "$LOGS_VERSIONED"    "$LOGS_ROOT"
-    # Temp tablespace is handled by the charm.  Clean up versioned dir if present.
-    rmdir "$TEMP_VERSIONED"
-    rmdir "$(dirname "$TEMP_VERSIONED")"
+    # Temp tablespace is handled by the charm.  Clean up versioned dir
+    # if present (may contain tablespace files, so use rm -rf).
+    rm -rf "$TEMP_VERSIONED"
+    rmdir "$(dirname "$TEMP_VERSIONED")" 2>/dev/null || true
 
     # PostgreSQL requires mode 700 on the data directory.
     # Do this before recreating pg_wal to avoid a window with wrong perms.
