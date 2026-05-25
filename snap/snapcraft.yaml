@@ -1,7 +1,7 @@
 # yamllint disable rule:line-length
 name: charmed-postgresql
 base: core24
-version: '16.13'
+version: '16.14'
 summary: PostgreSQL in a snap.
 description: |
   PostgreSQL is a free and open-source relational database management
@@ -179,6 +179,8 @@ apps:
     command: setpriv.sh $SNAP/usr/bin/pg_receivewal
   pg-updatedicts:
     command: setpriv.sh $SNAP/usr/sbin/pg_updatedicts
+  pg-waldump:
+    command: setpriv.sh $SNAP/usr/lib/postgresql/16/bin/pg_waldump
   pgbackrest:
     command: setpriv.sh $SNAP/usr/bin/pgbackrest
     environment:
