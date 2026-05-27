@@ -18,7 +18,6 @@ mkdir -p $SNAP_COMMON/var/log/pgbackrest
 mkdir -p $SNAP_COMMON/var/log/pgbouncer
 mkdir -p $SNAP_COMMON/var/log/postgresql
 
-cp $SNAP/config/patroni.yaml $SNAP_DATA/etc/patroni
 cp $SNAP/etc/pgbackrest.conf $SNAP_DATA/etc/pgbackrest
 cp $SNAP/etc/ldap/ldap.conf $SNAP_DATA/etc/ldap
 
