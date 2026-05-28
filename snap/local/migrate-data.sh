@@ -131,6 +131,35 @@ else
         fi
     fi
 
+    # Repoint pg_tblspc symlinks from versioned paths back to storage
+    # roots so WAL replay works after rollback.  WAL contains Storage
+    # CREATE records like "pg_tblspc/24638/PG_16_…/5/…" that use
+    # mkdir -p.  If pg_tblspc/24638 is missing or is not a symlink,
+    # mkdir -p creates it as a real directory, which then triggers a
+    # PANIC in CheckTablespaceDirectory ("unexpected directory entry …
+    # All directory entries in pg_tblspc/ should be symbolic links").
+    # Replacing the versioned symlink with one pointing to the storage
+    # root ensures mkdir -p follows the symlink into the root temp dir.
+    for pg_tblspc in "$DATA_VERSIONED/pg_tblspc" "$DATA_ROOT/pg_tblspc"; do
+        [ -d "$pg_tblspc" ] || continue
+        for entry in "$pg_tblspc"/*; do
+            if [ -L "$entry" ]; then
+                target=$(readlink "$entry")
+                case "$target" in
+                    */16/main)
+                        root_target="${target%/16/main}"
+                        rm "$entry"
+                        ln -s "$root_target" "$entry"
+                        ;;
+                esac
+            elif [ -d "$entry" ]; then
+                # Directory left by a previous failed WAL replay.
+                rm -rf "$entry"
+                ln -s "$TEMP_ROOT" "$entry"
+            fi
+        done
+    done
+
     if [ ! -f "$DATA_VERSIONED/PG_VERSION" ]; then
         # Data already at root — nothing to do.
         mkdir -p "$TEMP_VERSIONED"
