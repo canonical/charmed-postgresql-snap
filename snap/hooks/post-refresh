@@ -1,0 +1,5 @@
+#!/bin/bash
+# snapd enforces a 10-minute timeout on hooks.
+set -euo pipefail
+
+"$SNAP/setpriv.sh" "$SNAP/migrate-data.sh"
