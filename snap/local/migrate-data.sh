@@ -131,6 +131,24 @@ else
         fi
     fi
 
+    # Stop Patroni before relocating the data directory. snapd stops the snap's
+    # daemons only AFTER this pre-refresh hook, so Patroni is still live here;
+    # the moment we move files out of 16/main below, its HA loop restarts
+    # PostgreSQL and rewrites pg_hba.conf/pg_ident.conf/standby.signal back into
+    # 16/main, making `rmdir 16/main` fail "Directory not empty" and aborting the
+    # rollback under `set -e`. Must be a service-level stop (the service is
+    # restart-condition=always, so a kill would be revived by systemd); the charm
+    # restarts Patroni afterwards in _post_snap_refresh(). `timeout` bounds any
+    # unexpected snapd interaction so the 10-minute hook budget is never consumed.
+    if command -v snapctl >/dev/null 2>&1; then
+        timeout 120 snapctl stop charmed-postgresql.patroni 2>&1 \
+            || echo "migrate-data: WARN 'snapctl stop patroni' failed/timed out; continuing"
+    fi
+    for _ in $(seq 1 60); do
+        pgrep -x postgres >/dev/null 2>&1 || break
+        sleep 1
+    done
+
     # Repoint pg_tblspc symlinks from versioned paths back to storage
     # roots so WAL replay works after rollback.  WAL contains Storage
     # CREATE records like "pg_tblspc/24638/PG_16_…/5/…" that use
@@ -198,10 +216,19 @@ else
     reverse_one "$DATA_VERSIONED"    "$DATA_ROOT"
     reverse_one "$ARCHIVE_VERSIONED" "$ARCHIVE_ROOT"
     reverse_one "$LOGS_VERSIONED"    "$LOGS_ROOT"
-    # Temp tablespace is handled by the charm.  Clean up versioned dir
-    # if present (may contain tablespace files, so use rm -rf).
+    # Temp tablespace catalog is migrated by the charm on the PRIMARY only.
+    # But a rolling rollback rolls back replicas BEFORE the primary, so a
+    # replica must still replay the forward "CREATE TABLESPACE temp LOCATION
+    # '$TEMP_VERSIONED'" WAL record during recovery.  Its redo
+    # (create_tablespace_directories) chmod()s that absolute path and FATALs
+    # (58P01 "directory ... does not exist") if it is missing -- wedging the
+    # replica and stalling the rollback.  So clear any stale contents but KEEP
+    # an empty versioned LOCATION dir for replay; the cluster converges to the
+    # root layout once the primary migrates the catalog.  Do NOT rmdir the
+    # parent "16" dir for the same reason.
     rm -rf "$TEMP_VERSIONED"
-    rmdir "$(dirname "$TEMP_VERSIONED")" 2>/dev/null || true
+    mkdir -p "$TEMP_VERSIONED"
+    chmod 700 "$TEMP_VERSIONED"
 
     # PostgreSQL requires mode 700 on the data directory.
     # Do this before recreating pg_wal to avoid a window with wrong perms.
