@@ -109,8 +109,12 @@ environment:
 apps:
   createdb:
     command: setpriv.sh $SNAP/usr/bin/createdb
+    plugs:
+      - network
   createuser:
     command: setpriv.sh $SNAP/usr/bin/createuser
+    plugs:
+      - network
   ldap-sync:
     command: start-ldap-synchronizer.sh
     daemon: simple
@@ -153,6 +157,8 @@ apps:
     command: setpriv.sh $SNAP/usr/bin/pg_buildext
   pg-isready:
     command: setpriv.sh $SNAP/usr/bin/pg_isready
+    plugs:
+      - network
   pg-restore:
     command: setpriv.sh $SNAP/usr/bin/pg_restore
     plugs:
@@ -165,10 +171,14 @@ apps:
       - network
   pg-recvlogical:
     command: setpriv.sh $SNAP/usr/bin/pg_recvlogical
+    plugs:
+      - network
   pg-virtualenv:
     command: setpriv.sh $SNAP/usr/bin/pg_virtualenv
   pg-basebackup:
     command: setpriv.sh $SNAP/usr/bin/pg_basebackup
+    plugs:
+      - network
   pg-conftool:
     command: setpriv.sh $SNAP/usr/bin/pg_conftool
   pg-ctl:
@@ -179,6 +189,8 @@ apps:
       - network
   pg-receivewal:
     command: setpriv.sh $SNAP/usr/bin/pg_receivewal
+    plugs:
+      - network
   pg-updatedicts:
     command: setpriv.sh $SNAP/usr/sbin/pg_updatedicts
   pg-waldump:
@@ -206,6 +218,8 @@ apps:
       - network-bind
   pgbench:
     command: usr/bin/pgbench
+    plugs:
+      - network
   pgbouncer:
     command: setpriv.sh $SNAP/usr/sbin/pgbouncer
   pgbouncer-server:
