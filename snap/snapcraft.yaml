@@ -109,8 +109,12 @@ environment:
 apps:
   createdb:
     command: usr/bin/createdb
+    plugs:
+      - network
   createuser:
     command: usr/bin/createuser
+    plugs:
+      - network
   ldap-sync:
     command: start-ldap-synchronizer.sh
     daemon: simple
@@ -154,6 +158,8 @@ apps:
     command: usr/bin/pg_dropcluster
   pg-isready:
     command: usr/bin/pg_isready
+    plugs:
+      - network
   pg-restore:
     command: usr/bin/pg_restore
     plugs:
@@ -172,12 +178,16 @@ apps:
     command: usr/bin/pg_lsclusters
   pg-recvlogical:
     command: usr/bin/pg_recvlogical
+    plugs:
+      - network
   pg-restorecluster:
     command: usr/bin/pg_restorecluster
   pg-virtualenv:
     command: usr/bin/pg_virtualenv
   pg-basebackup:
     command: usr/bin/pg_basebackup
+    plugs:
+      - network
   pg-conftool:
     command: usr/bin/pg_conftool
   pg-ctl:
@@ -190,6 +200,8 @@ apps:
       - network
   pg-receivewal:
     command: usr/bin/pg_receivewal
+    plugs:
+      - network
   pg-renamecluster:
     command: usr/bin/pg_renamecluster
   pg-updatedicts:
@@ -217,6 +229,8 @@ apps:
       - network-bind
   pgbench:
     command: usr/bin/pgbench
+    plugs:
+      - network
   pgbouncer:
     command: usr/sbin/pgbouncer
   pgbouncer-server:
