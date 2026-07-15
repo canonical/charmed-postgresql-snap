@@ -15,23 +15,24 @@ if [ -z "${SNAP}" ]; then
     exec "${EXPORTER_PATH}" $(echo "${EXPORTER_OPTS}")
 else
     # When running as a snap, expect `exporter.user` and `exporter.password`
-    EXPORTER_USER="$(snapctl get exporter.user)"
-    EXPORTER_PASS="$(snapctl get exporter.password)"
+    DATA_SOURCE_USER="$(snapctl get exporter.user)"
+    DATA_SOURCE_PASS="$(snapctl get exporter.password)"
     EXPORTER_PATH="${SNAP}${EXPORTER_PATH}"
 
-    if [[ -z "${EXPORTER_USER}" || -z "${EXPORTER_PASS}" ]]; then
+    if [[ -z "${DATA_SOURCE_USER}" || -z "${DATA_SOURCE_PASS}" ]]; then
         echo "Error: exporter.user and exporter.password must be set" 2>&1
         exit 1
     fi
 
-    DATA_SOURCE_NAME="user=${EXPORTER_USER} password=${EXPORTER_PASS} host=${SOCKET_PATH}"
-    DATA_SOURCE_NAME+=" port=5432 database=postgres"
+    DATA_SOURCE_URI="${SOCKET_PATH}:5432/postgres"
     # For security measures, daemons should not be run as sudo.
     # Execute as the non-sudo user: _daemon_.
     exec "${SNAP}"/usr/bin/setpriv \
         --clear-groups \
         --reuid _daemon_ \
         --regid _daemon_ -- \
-        env DATA_SOURCE_NAME="${DATA_SOURCE_NAME}" \
+        env DATA_SOURCE_URI="${DATA_SOURCE_URI}" \
+        DATA_SOURCE_USER="${DATA_SOURCE_USER}" \
+        DATA_SOURCE_PASS="$DATA_SOURCE_PASS" \
         "${EXPORTER_PATH}" $(echo "${EXPORTER_OPTS}")
 fi
