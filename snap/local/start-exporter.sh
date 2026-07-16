@@ -7,9 +7,9 @@ EXPORTER_PATH="/usr/bin/prometheus-postgres-exporter"
 SOCKET_PATH="/tmp"
 
 if [ -z "${SNAP}" ]; then
-    # When not running as a snap, expect `DATA_SOURCE_NAME` to be set.
-    if [ -z "${DATA_SOURCE_NAME}" ]; then
-        echo "Error: DATA_SOURCE_NAME must be set" 2>&1
+    # When not running as a snap, expect `DATA_SOURCE_URI` to be set.
+    if [ -z "${DATA_SOURCE_URI}" ]; then
+        echo "Error: DATA_SOURCE_URI must be set" 2>&1
         exit 1
     fi
     exec "${EXPORTER_PATH}" $(echo "${EXPORTER_OPTS}")
@@ -24,7 +24,8 @@ else
         exit 1
     fi
 
-    DATA_SOURCE_URI="${SOCKET_PATH}:5432/postgres"
+    # URL escaped socket path is not allowed by Go.
+    DATA_SOURCE_URI=":5432/postgres?sslmode=disable&host=${SOCKET_PATH}"
     # For security measures, daemons should not be run as sudo.
     # Execute as the non-sudo user: snap_daemon.
     exec "${SNAP}"/usr/bin/setpriv \
