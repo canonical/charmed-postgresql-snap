@@ -25,7 +25,7 @@ else
     fi
 
     # URL escaped socket path is not allowed by Go.
-    DATA_SOURCE_URI=":5432/postgres?sslmode=disable&host=${SOCKET_PATH}"
+    DATA_SOURCE_URI=":5432/postgres?host=${SOCKET_PATH}"
     # For security measures, daemons should not be run as sudo.
     # Execute as the non-sudo user: snap_daemon.
     exec "${SNAP}"/usr/bin/setpriv \
