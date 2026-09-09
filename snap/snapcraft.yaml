@@ -2,7 +2,7 @@
 name: charmed-postgresql
 base: core24
 version: '16.15'
-summary: PostgreSQL in a snap.
+summary: Charmed PostgreSQL in a snap.
 description: |
   PostgreSQL is a free and open-source relational database management
   system emphasizing extensibility and SQL compliance.  This package
