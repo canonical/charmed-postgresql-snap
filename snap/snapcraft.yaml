@@ -31,6 +31,8 @@ plugs:
 
 package-repositories:
   - type: apt
+    ppa: neppel/pg-exporters-go125
+  - type: apt
     ppa: data-platform/patroni
   - type: apt
     ppa: data-platform/pgbackrest
