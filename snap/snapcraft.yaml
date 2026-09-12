@@ -270,6 +270,28 @@ apps:
       - network
 
 parts:
+  postgres-exporter-deb:
+    # test-only: stage the go1.25.14 postgres-exporter deb directly from the
+    # PPA build (noble-built; the PPA has no jammy publication for this one
+    # package). Go static-ish binaries from noble install fine in jammy
+    # chroots (same pattern data-platform uses for their jammy pocket).
+    plugin: nil
+    build-packages:
+      - curl
+      - dpkg
+    override-build: |
+      ARCH=$(dpkg --print-architecture)
+      case "$ARCH" in
+        amd64) BUILD_ID=33592087 ;;
+        arm64) BUILD_ID=33592088 ;;
+        *) echo "unsupported arch $ARCH" >&2; exit 1 ;;
+      esac
+      curl -sL -o postgres-exporter.deb \
+        "https://launchpad.net/~neppel/+archive/ubuntu/pg-exporters-go125/+build/${BUILD_ID}/+files/prometheus-postgres-exporter_0.15.0-1ubuntu0.8ppa1_${ARCH}.deb"
+      dpkg-deb -x postgres-exporter.deb "$CRAFT_PART_INSTALL/"
+      mkdir -p "$CRAFT_PART_INSTALL/licenses"
+      cp "$CRAFT_PART_INSTALL/usr/share/doc/prometheus-postgres-exporter/copyright" \
+         "$CRAFT_PART_INSTALL/licenses/COPYRIGHT-prometheus-postgres-exporter"
   postgres-debs:
     plugin: nil
     stage-packages:
@@ -277,7 +299,6 @@ parts:
       - util-linux
       - pgbouncer
       - pgbackrest
-      - prometheus-postgres-exporter
       - golang-github-prometheus-community-pgbouncer-exporter
       - python3-pysyncobj
       - patroni
@@ -310,7 +331,6 @@ parts:
       usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
       usr/share/doc/pgbouncer/copyright: licenses/COPYRIGHT-pgbouncer
       usr/share/doc/pgbackrest/copyright: licenses/COPYRIGHT-pgbackrest
-      usr/share/doc/prometheus-postgres-exporter/copyright: licenses/COPYRIGHT-prometheus-postgres-exporter
       usr/share/doc/golang-github-prometheus-community-pgbouncer-exporter/copyright: licenses/COPYRIGHT-golang-github-prometheus-community-pgbouncer-exporter
       usr/share/doc/python3-postgresql-ldap-sync/copyright: licenses/COPYRIGHT-python3-postgresql-ldap-sync
       usr/share/doc/python3-pysyncobj/copyright: licenses/COPYRIGHT-python3-pysyncobj
