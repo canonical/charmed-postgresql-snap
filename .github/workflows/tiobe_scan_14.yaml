@@ -23,6 +23,9 @@ jobs:
 
       - name: Create and activate virtual environment
         run: |
+          sudo apt update
+          sudo apt install libldap2-dev
+          sudo apt install libsasl2-dev
           python3 -m venv .venv
           . .venv/bin/activate
           pip install flake8 poetry pylint pytest tox postgresql-ldap-sync
