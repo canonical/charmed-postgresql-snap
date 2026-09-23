@@ -25,7 +25,7 @@ jobs:
         run: |
           python3 -m venv .venv
           . .venv/bin/activate
-          pip install flake8 poetry pylint pytest tox
+          pip install flake8 poetry pylint pytest tox postgresql-ldap-sync
           poetry install --all-groups
           echo PATH="$PATH" >> "$GITHUB_ENV"
 
