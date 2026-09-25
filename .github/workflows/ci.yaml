@@ -41,6 +41,24 @@ jobs:
     permissions: {}
     cache-mode: none
 
+  unit-test:
+    name: Unit tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+        with:
+          persist-credentials: false
+      - name: Install tox & poetry
+        run: |
+          pipx install tox
+          pipx install poetry
+      - name: tox run -e unit
+        run: tox run -e unit
+    permissions: {}
+    cache-mode: none
+
   build:
     name: Build snap
     uses: canonical/data-platform-workflows/.github/workflows/build_snap.yaml@v53.0.0
@@ -55,6 +73,7 @@ jobs:
     needs:
       - lint-workflows
       - lint
+      - unit-test
       - build
     steps:
       - name: Uninstall Postgresql
