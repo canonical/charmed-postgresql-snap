@@ -287,6 +287,7 @@ parts:
       - postgresql-16-set-user
       - postgresql-16-login-hook
       - postgresql-16-repack
+      - postgresql-16-cron
     organize:
       usr/share/doc/postgresql/copyright: licenses/COPYRIGHT-postgresql
       usr/share/doc/util-linux/copyright: licenses/COPYRIGHT-util-linux
@@ -321,6 +322,7 @@ parts:
       usr/share/doc/postgresql-16-set-user/copyright: licenses/COPYRIGHT-set-user
       usr/share/doc/postgresql-16-login-hook/copyright: licences/COPYRIGHT-login-hook
       usr/share/doc/postgresql-16-repack/copyright: licences/COPYRIGHT-repack
+      usr/share/doc/postgresql-16-cron/copyright: licenses/COPYRIGHT-pg-cron
   snap-license:
     plugin: dump
     source: .
