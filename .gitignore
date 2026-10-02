@@ -1,3 +1,5 @@
 *.snap
+.coverage
+coverage.xml
 exported.txt
 *__pycache__*
