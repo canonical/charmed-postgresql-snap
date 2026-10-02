@@ -31,7 +31,7 @@ ENV = {
 }
 
 
-class StopLoop(Exception):
+class StopLoopError(Exception):
     """Raised to break out of the synchronizer infinite loop."""
 
 
@@ -119,13 +119,13 @@ def test_main(synchronizer, monkeypatch):
     sync_users = MagicMock()
     sync_members = MagicMock()
     time = MagicMock()
-    time.sleep.side_effect = [None, StopLoop]
+    time.sleep.side_effect = [None, StopLoopError]
     monkeypatch.setattr(synchronizer, "_sync_users", sync_users)
     monkeypatch.setattr(synchronizer, "_sync_members", sync_members)
     monkeypatch.setattr(synchronizer, "atexit", MagicMock())
     monkeypatch.setattr(synchronizer, "time", time)
 
-    with pytest.raises(StopLoop):
+    with pytest.raises(StopLoopError):
         synchronizer.main()
 
     synchronizer.GLAuthClient.assert_called_once_with(

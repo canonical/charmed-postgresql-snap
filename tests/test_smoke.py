@@ -1,7 +1,11 @@
-import yaml
+# Copyright 2023 Canonical Ltd.
+# See LICENSE file for licensing details.
+
 import subprocess
 import time
+
 import pytest
+import yaml
 
 
 def test_install():
@@ -64,16 +68,12 @@ def test_all_services():
             if bool(data.get("daemon")) and app not in skip:
                 print(f"Running {snapcraft['name']}.{app}...")
                 try:
-                    subprocess.check_output(
-                        f"sudo snap start {snapcraft['name']}.{app}".split()
-                    )
+                    subprocess.check_output(f"sudo snap start {snapcraft['name']}.{app}".split())
                     time.sleep(5)
                     service = subprocess.check_output(
                         f"snap services {snapcraft['name']}.{app}".split()
                     )
-                    subprocess.check_output(
-                        f"sudo snap stop {snapcraft['name']}.{app}".split()
-                    )
+                    subprocess.check_output(f"sudo snap stop {snapcraft['name']}.{app}".split())
 
                     assert "active" in service.decode()
                 except subprocess.CalledProcessError as e:
@@ -87,9 +87,8 @@ def test_version():
         snapcraft = yaml.safe_load(file)
         snap_version = snapcraft["version"]
         app_version = (
-            subprocess.check_output(
-                ["sudo", f"{snapcraft['name']}.pg-isready", "--version"]
-            )
+            subprocess
+            .check_output(["sudo", f"{snapcraft['name']}.pg-isready", "--version"])
             .decode()
             .split(" ")[2]
         )
