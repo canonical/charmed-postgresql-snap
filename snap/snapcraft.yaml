@@ -312,7 +312,7 @@ parts:
       usr/share/doc/prometheus-pgbackrest-exporter/copyright: licenses/COPYRIGHT-pgbackrest-exporter
       usr/share/doc/postgresql-18-set-user/copyright: licenses/COPYRIGHT-set-user
       usr/share/doc/postgresql-18-repack/copyright: licences/COPYRIGHT-repack
-      usr/share/doc/postgresql-16-cron/copyright: licenses/COPYRIGHT-pg-cron
+      usr/share/doc/postgresql-18-cron/copyright: licenses/COPYRIGHT-pg-cron
   snap-license:
     plugin: dump
     source: .

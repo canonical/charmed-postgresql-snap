@@ -1,27 +1,27 @@
 #!/bin/bash
 #
 # One-shot daemon that runs as _daemon_ to perform data migration
-# between storage roots and versioned 16/main subdirectories.
+# between storage roots and versioned 18/main subdirectories.
 #
 # Direction is detected from the already-rendered Patroni YAML:
-#   - YAML expects versioned (16/main)  → forward migration
-#   - YAML expects root (no 16/main)    → reverse migration
+#   - YAML expects versioned (18/main)  → forward migration
+#   - YAML expects root (no 18/main)    → reverse migration
 set -euo pipefail
 
 SNAP_COMMON="${SNAP_COMMON:-/var/snap/charmed-postgresql/common}"
 
 DATA_ROOT="$SNAP_COMMON/var/lib/postgresql"
-DATA_VERSIONED="$DATA_ROOT/16/main"
+DATA_VERSIONED="$DATA_ROOT/18/main"
 ARCHIVE_ROOT="$SNAP_COMMON/data/archive"
-ARCHIVE_VERSIONED="$ARCHIVE_ROOT/16/main"
+ARCHIVE_VERSIONED="$ARCHIVE_ROOT/18/main"
 LOGS_ROOT="$SNAP_COMMON/data/logs"
-LOGS_VERSIONED="$LOGS_ROOT/16/main"
+LOGS_VERSIONED="$LOGS_ROOT/18/main"
 TEMP_ROOT="$SNAP_COMMON/data/temp"
-TEMP_VERSIONED="$TEMP_ROOT/16/main"
+TEMP_VERSIONED="$TEMP_ROOT/18/main"
 
 PATRONI_YAML="$SNAP_DATA/etc/patroni/patroni.yaml"
 # Direct psql binary (bypasses broken Perl wrapper)
-PSQL_BIN="$SNAP/usr/lib/postgresql/16/bin/psql"
+PSQL_BIN="$SNAP/usr/lib/postgresql/18/bin/psql"
 LIBDIR=$(ls -d "$SNAP"/usr/lib/*-linux-gnu 2>/dev/null | head -1)
 export LD_LIBRARY_PATH="${LIBDIR}${LD_LIBRARY_PATH:+:$LD_LIBRARY_PATH}"
 
@@ -45,7 +45,7 @@ if [ ! -f "$PATRONI_YAML" ]; then
     exit 0
 fi
 
-if grep -q '16/main' "$PATRONI_YAML"; then
+if grep -q '18/main' "$PATRONI_YAML"; then
     # Target expects versioned layout (forward upgrade).
     if [ -f "$DATA_VERSIONED/PG_VERSION" ]; then
         # Already migrated — just recreate temp dir.
@@ -74,7 +74,7 @@ if grep -q '16/main' "$PATRONI_YAML"; then
             [ -e "$item" ] || continue
             local name
             name=$(basename "$item")
-            [ "$name" = "16" ] && continue
+            [ "$name" = "18" ] && continue
             [ "$name" = "lost+found" ] && continue
             [ "$name" = "pg_wal" ] && [ -L "$item" ] && continue
             local dest="$versioned_path/$name"
@@ -133,9 +133,9 @@ else
 
     # Stop Patroni before relocating the data directory. snapd stops the snap's
     # daemons only AFTER this pre-refresh hook, so Patroni is still live here;
-    # the moment we move files out of 16/main below, its HA loop restarts
+    # the moment we move files out of 18/main below, its HA loop restarts
     # PostgreSQL and rewrites pg_hba.conf/pg_ident.conf/standby.signal back into
-    # 16/main, making `rmdir 16/main` fail "Directory not empty" and aborting the
+    # 18/main, making `rmdir 18/main` fail "Directory not empty" and aborting the
     # rollback under `set -e`. Must be a service-level stop (the service is
     # restart-condition=always, so a kill would be revived by systemd); the charm
     # restarts Patroni afterwards in _post_snap_refresh(). `timeout` bounds any
@@ -151,7 +151,7 @@ else
 
     # Repoint pg_tblspc symlinks from versioned paths back to storage
     # roots so WAL replay works after rollback.  WAL contains Storage
-    # CREATE records like "pg_tblspc/24638/PG_16_…/5/…" that use
+    # CREATE records like "pg_tblspc/24638/PG_18_…/5/…" that use
     # mkdir -p.  If pg_tblspc/24638 is missing or is not a symlink,
     # mkdir -p creates it as a real directory, which then triggers a
     # PANIC in CheckTablespaceDirectory ("unexpected directory entry …
@@ -164,8 +164,8 @@ else
             if [ -L "$entry" ]; then
                 target=$(readlink "$entry")
                 case "$target" in
-                    */16/main)
-                        root_target="${target%/16/main}"
+                    */18/main)
+                        root_target="${target%/18/main}"
                         rm "$entry"
                         ln -s "$root_target" "$entry"
                         ;;
@@ -225,7 +225,7 @@ else
     # replica and stalling the rollback.  So clear any stale contents but KEEP
     # an empty versioned LOCATION dir for replay; the cluster converges to the
     # root layout once the primary migrates the catalog.  Do NOT rmdir the
-    # parent "16" dir for the same reason.
+    # parent "18" dir for the same reason.
     rm -rf "$TEMP_VERSIONED"
     mkdir -p "$TEMP_VERSIONED"
     chmod 700 "$TEMP_VERSIONED"

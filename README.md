@@ -35,5 +35,5 @@ sudo snap install ./charmed-postgresql*.snap --dangerous
 ## License
 The PostgreSQL Snap is free software, distributed under the Apache
 Software License, version 2.0. See
-[LICENSE](https://github.com/canonical/charmed-postgresql-snap/blob/16/edge/LICENSE)
+[LICENSE](https://github.com/canonical/charmed-postgresql-snap/blob/18/edge/LICENSE)
 for more information.
