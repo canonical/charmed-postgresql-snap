@@ -1,7 +1,7 @@
 # yamllint disable rule:line-length
 name: charmed-postgresql
 base: core24
-version: '16.15'
+version: '16.16'
 summary: Charmed PostgreSQL in a snap.
 description: |
   PostgreSQL is a free and open-source relational database management
@@ -42,6 +42,8 @@ package-repositories:
     ppa: data-platform/postgresql-ldap-sync
   - type: apt
     ppa: data-platform/postgresql-login-hook
+  - type: apt
+    ppa: canonical-server/postgresql-sru-preparation
 
 layout:
   /usr/bin/perl:
